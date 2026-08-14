@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - VibeStream</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#050810;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.login-box{
+    width:380px;
+    background:#141922;
+    padding:40px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);
+}
+
+.logo{
+    text-align:center;
+    font-size:34px;
+    font-weight:bold;
+    color:#e50914;
+    margin-bottom:25px;
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+form p{
+    margin-bottom:18px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #333;
+    background:#0b0f17;
+    color:white;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#e50914;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#ff1f2d;
+}
+
+.signup-link{
+    text-align:center;
+    margin-top:18px;
+}
+
+.signup-link a{
+    color:#e50914;
+    text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <div class="logo">VibeStream</div>
+
+    <h2>Login</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="signup-link">
+        Don't have an account?
+        <a href="{% url 'signup' %}">Sign Up</a>
+    </div>
+
+</div>
+
+</body>
+</html>

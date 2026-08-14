@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ movie.title }} - VibeStream</title>
+
+<link rel="stylesheet" href="{% static 'css/movie_card.css' %}">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#111;
+    color:white;
+}
+
+.back{
+    display:inline-block;
+    margin:25px 40px;
+    color:#e50914;
+    text-decoration:none;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.back:hover{
+    text-decoration:underline;
+}
+
+.container{
+    display:flex;
+    gap:40px;
+    padding:20px 40px 40px;
+    align-items:flex-start;
+}
+
+.poster img{
+    width:320px;
+    border-radius:14px;
+    box-shadow:0 10px 25px rgba(0,0,0,.45);
+}
+
+.info{
+    flex:1;
+    max-width:850px;
+}
+
+.info h1{
+    font-size:52px;
+    margin-bottom:20px;
+    line-height:1.1;
+}
+
+.meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    margin-bottom:25px;
+    color:#d0d0d0;
+    font-size:18px;
+}
+
+.meta span{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.overview-title{
+    font-size:28px;
+    margin-bottom:15px;
+}
+
+.overview{
+    color:#d8d8d8;
+    line-height:1.8;
+    font-size:18px;
+    max-width:800px;
+}
+
+.player-section{
+    margin-top:35px;
+}
+
+.watch-btn{
+    display:inline-block;
+    background:#e50914;
+    color:white;
+    text-decoration:none;
+    padding:15px 30px;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.watch-btn:hover{
+    background:#ff1f2d;
+}
+
+.watch-note{
+    margin-top:14px;
+    color:#bdbdbd;
+    font-size:15px;
+}
+
+.section{
+    padding:10px 40px 60px;
+}
+
+.section h2{
+    font-size:32px;
+    margin-bottom:20px;
+}
+
+.movie-row{
+    display:flex;
+    align-items:flex-start;
+    gap:16px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:10px 0;
+    scroll-behavior:smooth;
+    scrollbar-width:none;
+}
+
+.movie-row::-webkit-scrollbar{
+    display:none;
+}
+
+@media(max-width:900px){
+
+    .container{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+        padding:20px;
+    }
+
+    .poster img{
+        width:250px;
+    }
+
+    .info h1{
+        font-size:36px;
+    }
+
+    .meta{
+        justify-content:center;
+        font-size:16px;
+    }
+
+    .overview{
+        font-size:16px;
+    }
+
+    .section{
+        padding:20px;
+    }
+
+    .section h2{
+        font-size:28px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<a class="back" href="{% url 'home' %}">← Back to VibeStream</a>
+
+<div class="container">
+
+    <div class="poster">
+        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+    </div>
+
+    <div class="info">
+
+        <h1>{{ movie.title }}</h1>
+
+        <div class="meta">
+
+            <span>⭐ {{ movie.rating|floatformat:1 }}</span>
+
+            <span>📅 {{ movie.release_year }}</span>
+
+            <span>🔥 {{ movie.popularity|floatformat:0 }}</span>
+
+            <span>🗳️ {{ movie.vote_count }} votes</span>
+
+            {% if movie.genre %}
+            <span>🎬 {{ movie.genre }}</span>
+            {% endif %}
+
+            <span>🏷️ {{ movie.category }}</span>
+
+        </div>
+
+        <h2 class="overview-title">Overview</h2>
+
+        <p class="overview">
+            {{ movie.overview }}
+        </p>
+
+        <div class="player-section">
+
+            <h2>Watch Now</h2>
+
+            <a href="{% url 'watch_movie' movie.id %}" class="watch-btn">
+                ▶ Play Now
+            </a>
+
+            <p class="watch-note">
+                Opens the official movie or trailer on YouTube.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="section">
+
+    <h2>🎬 You May Also Like</h2>
+
+    <div class="movie-row">
+
+        {% for movie in recommendations %}
+            {% include "movies/components/movie_card.html" %}
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

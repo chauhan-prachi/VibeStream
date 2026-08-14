@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search - VibeStream</title>
+
+<!-- Shared movie card styling -->
+<link rel="stylesheet" href="{% static 'css/movie_card.css' %}">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#050810;
+    color:white;
+}
+
+.container{
+    max-width:1400px;
+    margin:30px auto;
+    padding:20px;
+}
+
+.back-btn{
+    display:inline-block;
+    margin-bottom:25px;
+    padding:12px 20px;
+    background:#e50914;
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.back-btn:hover{
+    background:#ff1f2d;
+}
+
+h1{
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.search-box{
+    display:flex;
+    gap:10px;
+    margin-bottom:35px;
+}
+
+.search-box input{
+    flex:1;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:#141922;
+    color:white;
+    font-size:16px;
+}
+
+.search-box input:focus{
+    outline:2px solid #e50914;
+}
+
+.search-box button{
+    padding:16px 24px;
+    border:none;
+    border-radius:12px;
+    background:#e50914;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.search-box button:hover{
+    background:#ff1f2d;
+}
+.filter-row{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:12px;
+    margin-top:16px;
+    width:100%;
+}
+
+.filter-row select{
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#141922;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.filter-row select:focus{
+    outline:2px solid #e50914;
+}
+/* Grid layout for reusable movie cards */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,180px);
+    gap:20px;
+    justify-content:start;
+}
+
+.empty{
+    color:#bbb;
+    font-size:18px;
+    margin-top:20px;
+}
+
+@media(max-width:900px){
+    .container{
+        padding:15px;
+    }
+
+    h1{
+        font-size:34px;
+    }
+
+    .grid{
+        grid-template-columns:repeat(auto-fill,160px);
+        gap:18px;
+    }
+    .ai-badge{
+    display:inline-block;
+    background:rgba(229,9,20,.15);
+    color:#ff4d5a;
+    border:1px solid rgba(229,9,20,.4);
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:18px;
+}
+
+.search-results{
+    color:#d7d7d7;
+    margin-bottom:18px;
+    font-size:16px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+<div class="ai-badge">AI Search</div>
+<h1>Search Movies & TV Shows</h1>
+
+
+<form class="search-box" method="get">
+
+    <input
+        type="text"
+        name="q"
+        value="{{ query }}"
+        placeholder="Search by title, genre, mood, or description (e.g. space adventure)"
+    >
+
+    <button type="submit">Search</button>
+
+    <div class="filter-row">
+
+        <!-- Genre -->
+        <select name="genre">
+            <option value="">All Genres</option>
+            {% for g in genres %}
+                <option value="{{ g }}" {% if selected_genre == g %}selected{% endif %}>
+                    {{ g }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Year -->
+        <select name="year">
+            <option value="">All Years</option>
+            {% for y in years %}
+                <option value="{{ y }}" {% if selected_year == y|stringformat:"s" %}selected{% endif %}>
+                    {{ y }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Language -->
+        <select name="language">
+            <option value="">All Languages</option>
+            {% for lang in languages %}
+                <option value="{{ lang }}" {% if selected_language == lang %}selected{% endif %}>
+                    {{ lang|upper }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Rating -->
+        <select name="rating">
+            <option value="">Any Rating</option>
+            <option value="5" {% if selected_rating == "5" %}selected{% endif %}>5.0+</option>
+            <option value="6" {% if selected_rating == "6" %}selected{% endif %}>6.0+</option>
+            <option value="7" {% if selected_rating == "7" %}selected{% endif %}>7.0+</option>
+            <option value="8" {% if selected_rating == "8" %}selected{% endif %}>8.0+</option>
+            <option value="9" {% if selected_rating == "9" %}selected{% endif %}>9.0+</option>
+        </select>
+
+        <!-- Sort -->
+        <select name="sort">
+            <option value="">Trending</option>
+            <option value="rating" {% if selected_sort == "rating" %}selected{% endif %}>Top Rated</option>
+            <option value="year" {% if selected_sort == "year" %}selected{% endif %}>Newest</option>
+        </select>
+
+    </div>
+
+</form>
+{% if query %}
+
+    {% if movies %}
+
+    <div class="grid">
+
+        {% for movie in movies %}
+            {% include "movies/components/movie_card.html" %}
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <p class="empty">
+    No AI matches found for <strong>“{{ query }}”</strong>.<br>
+    Try a mood, genre, or description such as
+    <em>“space adventure”</em>,
+    <em>“crime family drama”</em>, or
+    <em>“feel-good comedy”</em>.
+</p>
+
+    {% endif %}
+
+{% else %}
+
+<p class="empty">
+    Start typing a movie or TV show name to search your VibeStream library.
+</p>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

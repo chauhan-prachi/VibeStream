@@ -1,0 +1,308 @@
+/* ==========================================
+   VibeStream Prime-Style Authentication Modal
+========================================== */
+
+.auth-modal{
+    position:fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.auth-modal.hidden{
+    display:none;
+}
+
+/* Backdrop */
+
+.auth-backdrop{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.78);
+    backdrop-filter:blur(8px);
+}
+
+/* Card */
+
+.auth-card{
+    position:relative;
+    width:460px;
+    background:#141922;
+    color:#fff;
+    border-radius:26px;
+    padding:36px;
+    z-index:2;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 30px 70px rgba(0,0,0,.55);
+}
+
+/* Close Button */
+
+.close-btn{
+    position:absolute;
+    top:18px;
+    right:18px;
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    color:#bbb;
+    font-size:22px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.close-btn:hover{
+    background:#e50914;
+    color:#fff;
+}
+
+/* Logo */
+
+.logo-wrap{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:28px;
+}
+
+.logo-icon{
+    width:48px;
+    height:48px;
+    background:#e50914;
+    border-radius:14px;
+}
+
+.logo-text{
+    font-size:34px;
+    font-weight:800;
+    color:#fff;
+    letter-spacing:.4px;
+}
+
+/* Heading */
+
+.auth-card h2{
+    font-size:34px;
+    font-weight:700;
+    margin:0 0 8px;
+    text-align:left;
+}
+
+.subtitle{
+    text-align:left;
+    color:#b8c0cc;
+    margin-bottom:30px;
+    font-size:15px;
+    line-height:1.5;
+}
+
+/* Inputs */
+
+.auth-card input{
+    width:100%;
+    padding:16px;
+    border-radius:14px;
+    border:1px solid #2b3442;
+    background:#0b0f17;
+    color:#fff;
+    font-size:16px;
+    margin-bottom:18px;
+    transition:border .25s, box-shadow .25s;
+}
+
+.auth-card input:focus{
+    outline:none;
+    border-color:#e50914;
+    box-shadow:0 0 0 3px rgba(229,9,20,.15);
+}
+
+.auth-card input::placeholder{
+    color:#8f98a3;
+}
+
+/* Password Field */
+
+.password-field{
+    position:relative;
+}
+
+.password-field span{
+    position:absolute;
+    right:16px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#aaa;
+    cursor:pointer;
+    font-size:14px;
+    user-select:none;
+}
+
+.password-field span:hover{
+    color:#fff;
+}
+
+/* Primary Button */
+
+.primary-btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:999px;
+    background:#e50914;
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+    margin-top:8px;
+}
+
+.primary-btn:hover{
+    background:#ff1f2d;
+    transform:translateY(-1px);
+}
+
+/* Secondary Button */
+
+.secondary-btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:999px;
+    background:#2b3442;
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+    margin-top:12px;
+}
+
+.secondary-btn:hover{
+    background:#3a4454;
+}
+
+/* Divider */
+
+.divider{
+    display:flex;
+    align-items:center;
+    margin:28px 0;
+    color:#8f98a3;
+    font-size:13px;
+    letter-spacing:.5px;
+}
+
+.divider::before,
+.divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:#2b3442;
+}
+
+.divider span{
+    padding:0 14px;
+}
+
+/* Google Button */
+
+.google-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:16px;
+    border-radius:999px;
+    background:#fff;
+    color:#111;
+    text-decoration:none;
+    font-weight:600;
+    transition:.25s;
+}
+
+.google-btn:hover{
+    background:#f3f3f3;
+    transform:translateY(-1px);
+}
+
+.google-btn img{
+    width:20px;
+    height:20px;
+}
+.forgot-password{
+    text-align:right;
+    margin:10px 4px 18px;
+}
+
+.forgot-password a{
+    color:#b8c0cc;
+    font-size:14px;
+    text-decoration:none;
+    transition:.2s;
+}
+
+.forgot-password a:hover{
+    color:#ffffff;
+}
+/* Signup Link */
+
+.signup-link{
+    margin-top:28px;
+    text-align:center;
+    color:#b8c0cc;
+    font-size:14px;
+}
+
+.signup-link a{
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+    transition:.25s;
+}
+
+.signup-link a:hover{
+    color:#ff4d5a;
+}
+
+/* Utility */
+
+.hidden{
+    display:none;
+}
+
+/* Responsive */
+
+@media (max-width:520px){
+
+    .auth-card{
+        width:92%;
+        padding:28px;
+        border-radius:22px;
+    }
+
+    .logo-text{
+        font-size:28px;
+    }
+
+    .logo-icon{
+        width:42px;
+        height:42px;
+    }
+
+    .auth-card h2{
+        font-size:28px;
+    }
+
+    .auth-card input,
+    .primary-btn,
+    .secondary-btn,
+    .google-btn{
+        padding:14px;
+    }
+}

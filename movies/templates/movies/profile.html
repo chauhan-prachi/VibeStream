@@ -1,0 +1,605 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile - VibeStream</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#050810;
+    color:#fff;
+}
+
+/* =========================
+   Top Navigation
+========================= */
+
+.topbar{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:72px;
+    background:#050810;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 40px;
+    z-index:1000;
+}
+
+.brand{
+    font-size:30px;
+    font-weight:800;
+    color:#e50914;
+}
+
+.back-link{
+    color:#b8c0cc;
+    text-decoration:none;
+    font-size:15px;
+    transition:.25s;
+}
+
+.back-link:hover{
+    color:#fff;
+}
+
+/* =========================
+   Main Container
+========================= */
+
+.container{
+    max-width:1300px;
+    margin:110px auto 60px;
+    padding:0 30px;
+}
+
+/* =========================
+   Hero Profile
+========================= */
+
+.profile-hero{
+    background:linear-gradient(135deg,#141922,#1a2230);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:24px;
+    padding:36px;
+    display:flex;
+    align-items:center;
+    gap:28px;
+    margin-bottom:42px;
+}
+
+.avatar{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:#e50914;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:44px;
+    font-weight:700;
+    color:#fff;
+    box-shadow:0 0 0 6px rgba(229,9,20,.15);
+    flex-shrink:0;
+}
+
+.user-details h1{
+    font-size:36px;
+    margin-bottom:6px;
+}
+
+.user-details p{
+    color:#b8c0cc;
+    font-size:16px;
+    margin-bottom:20px;
+}
+
+.stats{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+}
+
+.stat-card{
+    background:#0f141d;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:16px;
+    padding:18px 22px;
+    min-width:150px;
+}
+
+.stat-card strong{
+    display:block;
+    font-size:28px;
+    margin-bottom:6px;
+}
+
+.stat-card span{
+    color:#9aa4b2;
+    font-size:14px;
+}
+
+/* =========================
+   Sections
+========================= */
+
+.section{
+    margin-top:42px;
+}
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.section-header h2{
+    font-size:28px;
+}
+
+.section-header a{
+    color:#b8c0cc;
+    text-decoration:none;
+    font-size:15px;
+}
+
+.section-header a:hover{
+    color:#fff;
+}
+
+/* =========================
+   Movie Row
+========================= */
+
+.movie-row{
+    display:flex;
+    gap:18px;
+    overflow-x:auto;
+    padding-bottom:8px;
+    scroll-behavior:smooth;
+}
+
+.movie-row::-webkit-scrollbar{
+    display:none;
+}
+
+.movie-card{
+    width:180px;
+    min-width:180px;
+    background:#141922;
+    border-radius:16px;
+    overflow:hidden;
+    text-decoration:none;
+    color:#fff;
+    border:1px solid rgba(255,255,255,.06);
+    transition:.25s;
+}
+
+.movie-card:hover{
+    transform:translateY(-6px);
+    border-color:#e50914;
+}
+
+.movie-card img{
+    width:100%;
+    height:250px;
+    object-fit:cover;
+}
+
+.movie-info{
+    padding:12px;
+}
+
+.movie-info h3{
+    font-size:15px;
+    margin-bottom:8px;
+}
+
+.progress-bar{
+    width:100%;
+    height:5px;
+    background:rgba(255,255,255,.12);
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    background:#e50914;
+}
+
+/* =========================
+   Empty State
+========================= */
+
+.empty-card{
+    background:#141922;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;
+    padding:34px;
+    text-align:center;
+}
+
+.empty-icon{
+    font-size:42px;
+    margin-bottom:14px;
+}
+
+.empty-card h3{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.empty-card p{
+    color:#9aa4b2;
+    margin-bottom:20px;
+}
+
+.empty-card a{
+    display:inline-block;
+    background:#e50914;
+    color:#fff;
+    text-decoration:none;
+    padding:14px 24px;
+    border-radius:999px;
+    font-weight:600;
+    transition:.25s;
+}
+
+.empty-card a:hover{
+    background:#ff1f2d;
+}
+.movie-card{
+    position: relative;
+}
+
+.remove-btn{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(0,0,0,.75);
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    opacity: 0;
+    transition: .25s;
+    z-index: 5;
+}
+
+.movie-card:hover .remove-btn{
+    opacity: 1;
+}
+
+.remove-btn:hover{
+    background: #e50914;
+    transform: scale(1.08);
+}
+/* =========================
+   Account
+========================= */
+
+.account{
+    margin-top:50px;
+    background:#141922;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:22px;
+    overflow:hidden;
+}
+
+.account h2{
+    padding:22px 26px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    font-size:28px;
+}
+
+.account a{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:22px 26px;
+    text-decoration:none;
+    color:#fff;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    transition:.25s;
+    font-size:16px;
+}
+
+.account a:last-child{
+    border-bottom:none;
+}
+
+.account a:hover{
+    background:rgba(255,255,255,.03);
+}
+
+.account .icon{
+    margin-right:14px;
+}
+
+.logout{
+    color:#e50914;
+    font-weight:600;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media(max-width:768px){
+
+    .topbar{
+        padding:0 20px;
+    }
+
+    .container{
+        padding:0 18px;
+    }
+
+    .profile-hero{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .stats{
+        justify-content:center;
+    }
+
+    .movie-card{
+        width:150px;
+        min-width:150px;
+    }
+
+    .movie-card img{
+        height:210px;
+    }
+
+    .section-header h2{
+        font-size:24px;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="topbar">
+    <div class="brand">VibeStream</div>
+
+    <a href="{% url 'home' %}" class="back-link">
+        ← Back to Home
+    </a>
+</div>
+
+<div class="container">
+
+    <!-- Hero -->
+    <div class="profile-hero">
+
+        <div class="avatar">
+            {{ request.user.username|first|upper }}
+        </div>
+
+        <div class="user-details">
+
+            {% if edit_mode %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <input type="text"
+                       name="username"
+                       value="{{ request.user.username }}"
+                       style="padding:12px;border-radius:10px;border:none;background:#0f141d;color:white;width:320px;margin-bottom:12px;display:block;">
+
+                <input type="email"
+                       name="email"
+                       value="{{ request.user.email }}"
+                       style="padding:12px;border-radius:10px;border:none;background:#0f141d;color:white;width:320px;margin-bottom:18px;display:block;">
+
+                {% if error %}
+                <p style="color:#ff8a8a;margin-bottom:12px;">{{ error }}</p>
+                {% endif %}
+
+                <button type="submit"
+                        style="background:#e50914;color:white;border:none;padding:12px 22px;border-radius:10px;font-weight:bold;cursor:pointer;">
+                    Save Changes
+                </button>
+
+                <a href="{% url 'profile' %}"
+                   style="margin-left:12px;color:#b8c0cc;text-decoration:none;">
+                    Cancel
+                </a>
+
+            </form>
+
+            {% else %}
+
+            <h1>{{ request.user.username }}</h1>
+            <p>{{ request.user.email }}</p>
+
+            {% endif %}
+
+            <div class="stats">
+
+                <div class="stat-card">
+                    <strong>{{ watchlist_count }}</strong>
+                    <span>My List</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong>{{ continue_count }}</strong>
+                    <span>Continue Watching</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong>{{ request.user.date_joined|date:"Y" }}</strong>
+                    <span>Member Since</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Continue Watching -->
+    <div class="section">
+
+        <div class="section-header">
+            <h2>Continue Watching</h2>
+            <a href="#">See All →</a>
+        </div>
+
+        {% if continue_watching %}
+
+        <div class="movie-row">
+
+    {% for item in continue_watching %}
+
+    <div class="movie-card">
+
+        <a href="{% url 'watch_movie' item.movie.id %}">
+            <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}">
+        </a>
+
+        <!-- Remove Button -->
+        <a href="{% url 'remove_from_continue_watching' item.movie.id %}"
+           class="remove-btn"
+           title="Remove from Continue Watching">
+            ✕
+        </a>
+
+        <div class="movie-info">
+
+            <h3>{{ item.movie.title }}</h3>
+
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ item.progress }}%;"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+        {% else %}
+
+        <div class="empty-card">
+
+            <div class="empty-icon">▶</div>
+
+            <h3>Start Watching</h3>
+
+            <p>Your recently watched movies will appear here.</p>
+
+            <a href="{% url 'home' %}">Browse Movies</a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- My List -->
+    <div class="section">
+
+        <div class="section-header">
+            <h2>My List</h2>
+            <a href="#">See All →</a>
+        </div>
+
+        {% if watchlist %}
+        <div class="movie-row">
+
+    {% for item in watchlist %}
+
+    <div class="movie-card">
+
+        <a href="{% url 'movie_detail' item.movie.id %}">
+            <img src="{{ item.movie.poster_url }}" alt="{{ item.movie.title }}">
+        </a>
+
+        <!-- Remove Button -->
+        <a href="{% url 'remove_from_watchlist' item.movie.id %}"
+           class="remove-btn"
+           title="Remove from My List">
+            ✕
+        </a>
+
+        <div class="movie-info">
+            <h3>{{ item.movie.title }}</h3>
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+    </div>
+        
+
+            
+        {% else %}
+
+        <div class="empty-card">
+
+            <div class="empty-icon">❤</div>
+
+            <h3>Your My List is Empty</h3>
+
+            <p>Save movies and TV shows to watch them later.</p>
+
+            <a href="{% url 'home' %}">Explore Trending</a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- Account -->
+    <div class="account">
+
+        <h2>Account</h2>
+
+        <a href="{% url 'profile' %}?edit=1">
+            <span><span class="icon">👤</span>Edit Profile</span>
+            <span>›</span>
+        </a>
+
+        <a href="{% url 'change_password' %}">
+            <span><span class="icon">🔒</span>Change Password</span>
+            <span>›</span>
+        </a>
+
+
+        <a href="{% url 'logout' %}" class="logout">
+            <span><span class="icon">🚪</span>Log Out</span>
+            <span>›</span>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

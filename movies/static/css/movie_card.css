@@ -1,0 +1,267 @@
+/* ==========================================
+   VibeStream Premium Movie Card
+========================================== */
+
+.movie-card{
+    position:relative;
+    width:180px;
+    min-width:180px;
+    flex:0 0 180px;
+
+    background:#141922;
+    border-radius:18px;
+    overflow:hidden;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.35);
+    transition:transform .35s ease, box-shadow .35s ease;
+}
+
+.movie-card:hover{
+    transform:translateY(-10px) scale(1.06);
+    box-shadow:0 25px 45px rgba(0,0,0,.55);
+}
+
+/* =========================
+   Poster
+========================= */
+
+.movie-card img{
+    width:100%;
+    height:270px;
+    object-fit:cover;
+    display:block;
+    transition:transform .35s ease;
+}
+
+.movie-card:hover img{
+    transform:scale(1.08);
+}
+/* =========================
+   Floating Watchlist Heart
+========================= */
+
+.watchlist-heart{
+    position:absolute;
+    top:10px;
+    right:10px;
+
+    width:34px;
+    height:34px;
+
+    border-radius:50%;
+    background:rgba(0,0,0,.72);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+    font-size:18px;
+
+    z-index:100;              /* above everything */
+    opacity:1;                /* always visible */
+    pointer-events:auto;      /* clickable */
+
+    transition:transform .25s ease,
+               background .25s ease;
+}
+
+.watchlist-heart:hover{
+    background:#e50914;
+    transform:scale(1.08);
+}
+/* =========================
+   Bottom Info
+========================= */
+
+.movie-info{
+    padding:14px;
+    background:#141922;
+    min-height:95px;
+
+    transition:opacity .3s ease, transform .3s ease;
+}
+
+.movie-card:hover .movie-info{
+    opacity:0;
+    transform:translateY(12px);
+}
+
+.movie-info h3{
+    font-size:16px;
+    line-height:1.3;
+    height:42px;
+
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+
+    overflow:hidden;
+
+    color:#fff;
+    margin-bottom:6px;
+}
+
+.movie-info p{
+    color:#aab1bb;
+    font-size:14px;
+    margin-bottom:4px;
+}
+
+.rating{
+    color:#ffd54f;
+    font-weight:bold;
+}
+
+/* =========================
+   Hover Overlay
+========================= */
+
+.card-overlay{
+    position:absolute;
+    inset:0;
+    z-index:3;
+
+    background:linear-gradient(
+        to top,
+        rgba(5,8,16,.96) 0%,
+        rgba(5,8,16,.72) 45%,
+        rgba(5,8,16,.15) 100%
+    );
+
+    opacity:0;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:flex-start;
+
+    padding:16px;
+
+    transition:opacity .3s ease, transform .3s ease;
+
+    transform:translateY(8px);
+
+    /* NEW */
+    pointer-events:none;
+}
+
+.movie-card:hover .card-overlay{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* =========================
+   Overlay Buttons
+========================= */
+
+.overlay-buttons{
+    display:flex;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+/* Base style for ALL buttons */
+.play-btn,
+.overlay-btn{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    min-height:44px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+    font-size:18px;
+    line-height:1;
+
+    transition:.25s;
+}
+
+/* Play button */
+.play-btn{
+    background:#ffffff;
+    color:#000;
+    border:none;
+}
+
+/* Secondary buttons */
+.overlay-btn{
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.08);
+    color:#fff;
+    backdrop-filter:blur(6px);
+}
+
+/* Hover effects */
+.play-btn:hover{
+    background:#e50914;
+    color:#fff;
+    transform:scale(1.08);
+}
+
+.overlay-btn:hover{
+    background:#e50914;
+    border-color:#e50914;
+    transform:scale(1.08);
+}
+.overlay-buttons,
+.overlay-buttons a,
+.play-btn,
+.overlay-btn{
+    pointer-events:auto;
+}
+/* =========================
+   Overlay Text
+========================= */
+
+.overlay-meta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:600;
+}
+
+.overlay-rating{
+    color:#ffd54f;
+}
+
+.overlay-year{
+    color:#cfd6df;
+}
+
+.overlay-genre{
+    color:#d7d7d7;
+    font-size:13px;
+    line-height:1.35;
+}
+/* ===== Watch page recommendation fix ===== */
+
+.recommendation-row .movie-card{
+    position: relative;
+    width:180px;
+    min-width:180px;
+    flex:0 0 180px;
+}
+
+.recommendation-row .card-overlay{
+    position:absolute;
+    inset:0;
+    z-index:10;
+    opacity:0;
+}
+
+.recommendation-row .movie-card:hover .card-overlay{
+    opacity:1;
+}
+
+.recommendation-row .movie-info{
+    position:relative;
+    z-index:1;
+}

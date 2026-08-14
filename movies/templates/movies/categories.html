@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categories - VibeStream</title>
+
+<!-- Shared movie card styling -->
+<link rel="stylesheet" href="{% static 'css/movie_card.css' %}">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#050810;
+    color:white;
+}
+
+.container{
+    max-width:1400px;
+    margin:30px auto;
+    padding:20px;
+}
+
+.back-btn{
+    display:inline-block;
+    margin-bottom:30px;
+    padding:12px 20px;
+    background:#e50914;
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.back-btn:hover{
+    background:#ff1f2d;
+}
+
+h1{
+    font-size:42px;
+    margin-bottom:30px;
+}
+
+.genre-section{
+    margin-bottom:50px;
+}
+
+.genre-title{
+    font-size:28px;
+    margin-bottom:20px;
+}
+
+/* Horizontal row like Home page */
+
+.movie-row{
+    display:flex;
+    gap:18px;
+    overflow-x:auto;
+    scroll-behavior:smooth;
+    padding-bottom:10px;
+}
+
+.movie-row::-webkit-scrollbar{
+    display:none;
+}
+
+.empty{
+    color:#bbb;
+    font-size:18px;
+    margin-top:20px;
+}
+
+@media(max-width:900px){
+
+    .container{
+        padding:15px;
+    }
+
+    h1{
+        font-size:34px;
+    }
+
+    .genre-title{
+        font-size:24px;
+    }
+
+    .movie-row{
+        gap:16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+
+<h1>Browse by Genre</h1>
+
+{% if genre_movies %}
+
+    {% for genre, movies in genre_movies.items %}
+
+    <div class="genre-section">
+
+        <h2 class="genre-title">{{ genre }}</h2>
+
+        <div class="movie-row">
+
+            {% for movie in movies %}
+                {% include "movies/components/movie_card.html" %}
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+<p class="empty">No categories available in your VibeStream library.</p>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

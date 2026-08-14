@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TV Shows - VibeStream</title>
+
+<link rel="stylesheet" href="{% static 'css/movie_card.css' %}">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#050810;
+    color:white;
+}
+
+.container{
+    max-width:1400px;
+    margin:30px auto;
+    padding:20px;
+}
+
+.back-btn{
+    display:inline-block;
+    margin-bottom:25px;
+    padding:12px 20px;
+    background:#e50914;
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#aab1bb;
+    margin-bottom:30px;
+    font-size:18px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,180px);
+    gap:20px;
+    justify-content:start;
+}
+
+.empty{
+    color:#bbb;
+    font-size:18px;
+    text-align:center;
+    margin-top:60px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+
+<h1>📺 TV Shows</h1>
+<p class="subtitle">Browse popular TV shows available on VibeStream</p>
+
+{% if tv_shows %}
+
+<div class="grid">
+
+    {% for movie in tv_shows %}
+        {% include "movies/components/movie_card.html" %}
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<p class="empty">No TV shows available in your VibeStream library.</p>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>
