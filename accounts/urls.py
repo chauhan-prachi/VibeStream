@@ -7,6 +7,9 @@ urlpatterns = [
     path("signup/", views.signup_view, name="signup"),
     path("logout/", views.logout_view, name="logout"),
     path("check-user/", views.check_user, name="check_user"),
+    path("settings/", views.settings_view, name="settings"),
+    path("delete-account/", views.delete_account, name="delete_account"),
+    path("edit-profile/",views.edit_profile,name="edit_profile"),
 
     # Change Password
     path(

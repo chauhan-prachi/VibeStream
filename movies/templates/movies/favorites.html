@@ -1,34 +1,318 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>VibeStream</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My List - VibeStream</title>
+
     <style>
-        body{
-            background:#050810;
-            color:white;
-            font-family:Arial,sans-serif;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-            margin:0;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
-        a{
-            color:#e50914;
-            text-decoration:none;
-            margin-top:20px;
-            display:inline-block;
+        body {
+            background: #050810;
+            color: #fff;
+            min-height: 100vh;
         }
+
+        .my-list-page {
+            padding: 50px;
+        }
+
+        .page-header {
+            margin-bottom: 35px;
+        }
+
+        .page-header h1 {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #9da5b4;
+            font-size: 15px;
+        }
+
+        /* =========================
+           Movie Grid
+        ========================= */
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 26px;
+        }
+
+        .movie-card {
+            position: relative;
+            background: #141922;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform .25s ease;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .poster-link {
+            display: block;
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 285px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-info h3 {
+            font-size: 17px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* =========================
+           Remove Button
+        ========================= */
+
+        .remove-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+
+            width: 36px;
+            height: 36px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: rgba(0, 0, 0, .75);
+            color: #fff;
+
+            text-decoration: none;
+            font-size: 18px;
+
+            transition: .2s;
+        }
+
+        .remove-btn:hover {
+            background: #e50914;
+            transform: scale(1.08);
+        }
+
+        /* =========================
+           Empty State
+        ========================= */
+
+        .empty-card {
+            min-height: 400px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            background: #141922;
+
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 22px;
+
+            padding: 50px 20px;
+        }
+
+        .empty-icon {
+            width: 75px;
+            height: 75px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: rgba(229, 9, 20, .12);
+
+            font-size: 34px;
+            margin-bottom: 22px;
+        }
+
+        .empty-card h2 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .empty-card p {
+            color: #9da5b4;
+            margin-bottom: 25px;
+        }
+
+        .explore-btn {
+            display: inline-block;
+
+            padding: 12px 24px;
+
+            background: #e50914;
+            color: #fff;
+
+            border-radius: 999px;
+
+            text-decoration: none;
+            font-weight: 600;
+
+            transition: .2s;
+        }
+
+        .explore-btn:hover {
+            background: #ff1f2d;
+        }
+
+        /* =========================
+           Responsive
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            .my-list-page {
+                padding: 30px 20px 50px;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .movie-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .movie-card img {
+                height: 240px;
+            }
+
+        }
+
     </style>
 </head>
+
 <body>
 
-<div style="text-align:center;">
-    <h1>Coming Soon</h1>
-    <p>This page will be implemented in the next step.</p>
-    <a href="{% url 'home' %}">← Back to Home</a>
+<div class="my-list-page">
+
+    <!-- Page Header -->
+
+    <div class="page-header">
+
+        <h1>My List</h1>
+
+        <p>
+            Movies and TV shows you've saved to watch later.
+        </p>
+
+    </div>
+
+
+    <!-- Saved Movies -->
+
+    {% if watchlist %}
+
+        <div class="movie-grid">
+
+            {% for item in watchlist %}
+
+                <div class="movie-card">
+
+                    <!-- Movie Poster -->
+
+                    <a
+                        href="{% url 'movie_detail' item.movie.id %}"
+                        class="poster-link"
+                    >
+
+                        <img
+                            src="{{ item.movie.poster_url }}"
+                            alt="{{ item.movie.title }}"
+                        >
+
+                    </a>
+
+
+                    <!-- Remove From My List -->
+
+                    <a
+                        href="{% url 'remove_from_watchlist' item.movie.id %}"
+                        class="remove-btn"
+                        title="Remove from My List"
+                    >
+                        ✕
+                    </a>
+
+
+                    <!-- Movie Information -->
+
+                    <div class="movie-info">
+
+                        <h3>
+                            {{ item.movie.title }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <!-- Empty State -->
+
+        <div class="empty-card">
+
+            <div class="empty-icon">
+                ♡
+            </div>
+
+            <h2>Your My List is Empty</h2>
+
+            <p>
+                Save movies and TV shows to watch them later.
+            </p>
+
+            <a
+                href="{% url 'home' %}"
+                class="explore-btn"
+            >
+                Explore Trending
+            </a>
+
+        </div>
+
+    {% endif %}
+
 </div>
 
 </body>
+
 </html>

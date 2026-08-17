@@ -336,8 +336,161 @@ body{
 }
 
 .logout{
-    color:#e50914;
+    color:#fff;
     font-weight:600;
+}
+
+.delete-account{
+    color:#fff !important;
+}
+
+.delete-account:hover{
+    background:rgba(255,255,255,.03);
+}
+
+.delete-account .icon{
+    color:#fff;
+}
+/* =========================
+   Premium Delete Modal
+========================= */
+
+.delete-modal{
+    position:fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+}
+
+.delete-modal.hidden{
+    display:none;
+}
+
+.delete-backdrop{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.78);
+    backdrop-filter:blur(10px);
+}
+
+.delete-card{
+    position:relative;
+    width:460px;
+    background:#141922;
+    border-radius:22px;
+    padding:36px;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 30px 80px rgba(0,0,0,.6);
+    z-index:2;
+    animation:modalIn .25s ease;
+}
+
+.delete-close{
+    position:absolute;
+    top:16px;
+    right:16px;
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+}
+
+.delete-close:hover{
+    background:#ef4444;
+}
+
+.delete-icon{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    background:rgba(239,68,68,.15);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    margin:0 auto 20px;
+}
+
+.delete-card h2{
+    text-align:center;
+    font-size:30px;
+    margin-bottom:14px;
+}
+
+.delete-text{
+    text-align:center;
+    color:#b8c0cc;
+    line-height:1.7;
+    margin-bottom:24px;
+}
+
+.delete-card input{
+    width:100%;
+    padding:16px;
+    border-radius:14px;
+    border:1px solid #2b3442;
+    background:#0b0f17;
+    color:#fff;
+    margin-bottom:22px;
+    font-size:15px;
+}
+
+.delete-card input:focus{
+    outline:none;
+    border-color:#ef4444;
+    box-shadow:0 0 0 3px rgba(239,68,68,.15);
+}
+
+.delete-actions{
+    display:flex;
+    gap:12px;
+}
+
+.cancel-btn,
+.delete-btn{
+    flex:1;
+    padding:15px;
+    border:none;
+    border-radius:999px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.cancel-btn{
+    background:#2b3442;
+    color:#fff;
+}
+
+.cancel-btn:hover{
+    background:#3b4555;
+}
+
+.delete-btn{
+    background:#dc2626;
+    color:#fff;
+}
+
+.delete-btn:hover{
+    background:#b91c1c;
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:scale(.95);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
 }
 
 /* =========================
@@ -374,6 +527,11 @@ body{
 
     .section-header h2{
         font-size:24px;
+    }
+
+    .delete-card{
+        width:92%;
+        padding:28px;
     }
 }
 </style>
@@ -525,7 +683,7 @@ body{
 
         <div class="section-header">
             <h2>My List</h2>
-            <a href="#">See All →</a>
+            <a href="{% url 'favorites' %}">See All →</a>
         </div>
 
         {% if watchlist %}
@@ -576,30 +734,78 @@ body{
 
     </div>
 
-    <!-- Account -->
-    <div class="account">
+         <!-- Account -->
+<div class="account">
 
-        <h2>Account</h2>
+    <h2>Account</h2>
 
-        <a href="{% url 'profile' %}?edit=1">
-            <span><span class="icon">👤</span>Edit Profile</span>
-            <span>›</span>
-        </a>
+    <a href="{% url 'profile' %}?edit=1">
+        <span><span class="icon">👤</span>Edit Profile</span>
+        <span>›</span>
+    </a>
 
-        <a href="{% url 'change_password' %}">
-            <span><span class="icon">🔒</span>Change Password</span>
-            <span>›</span>
-        </a>
+    
 
+    <!-- Delete Account -->
+    <a href="#" onclick="openDeleteModal(); return false;" class="delete-account">
+        <span><span class="icon">🗑</span>Delete Account</span>
+        <span>›</span>
+    </a>
 
-        <a href="{% url 'logout' %}" class="logout">
-            <span><span class="icon">🚪</span>Log Out</span>
-            <span>›</span>
-        </a>
-
-    </div>
+    <a href="{% url 'logout' %}" class="logout">
+        <span><span class="icon">🚪</span>Log Out</span>
+        <span>›</span>
+    </a>
 
 </div>
 
+         <!-- Delete Account Modal -->
+<div id="deleteModal" class="delete-modal hidden">
+    <div class="delete-backdrop" onclick="closeDeleteModal()"></div>
+
+    <div class="delete-card">
+        <button class="delete-close" onclick="closeDeleteModal()">×</button>
+
+        <div class="delete-icon">🗑</div>
+
+        <h2>Delete Account</h2>
+
+        <p class="delete-text">
+            Are you sure you want to permanently delete your
+            <strong>VibeStream account</strong>?
+            This action cannot be undone and all your saved data,
+            watch history, and preferences will be removed forever.
+        </p>
+
+        <form method="post" action="{% url 'delete_account' %}">
+            {% csrf_token %}
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your current password"
+                required>
+
+            <div class="delete-actions">
+                <button type="button" class="cancel-btn" onclick="closeDeleteModal()">
+                    Cancel
+                </button>
+
+                <button type="submit" class="delete-btn">
+                    Delete Forever
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openDeleteModal() {
+    document.getElementById("deleteModal").classList.remove("hidden");
+}
+
+function closeDeleteModal() {
+    document.getElementById("deleteModal").classList.add("hidden");
+}
+</script>
 </body>
-</html>

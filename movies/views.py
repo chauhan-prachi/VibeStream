@@ -449,16 +449,24 @@ def tv_page(request):
     ) 
  
  
-# ========================= 
-# Favorites Page 
-# ========================= 
- 
-def favorites_page(request): 
- 
-    return render( 
-        request, 
-        "movies/favorites.html", 
-    ) 
+# =========================
+# Favorites / My List Page
+# =========================
+
+@login_required
+def favorites_page(request):
+
+    watchlist = WatchList.objects.filter(
+        user=request.user
+    ).select_related("movie").order_by("-id")
+
+    return render(
+        request,
+        "movies/favorites.html",
+        {
+            "watchlist": watchlist,
+        },
+    )
  
  
 # ========================= 

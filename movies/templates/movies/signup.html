@@ -194,6 +194,40 @@ body{
 .back-home:hover{
     color:#fff;
 }
+#toast-container{
+    position:fixed;
+    top:24px;
+    right:24px;
+    z-index:9999;
+}
+
+.toast{
+    background:#1f2937;
+    color:#fff;
+    padding:16px 22px;
+    border-radius:14px;
+    box-shadow:0 10px 25px rgba(0,0,0,.35);
+    margin-bottom:12px;
+    min-width:280px;
+    font-weight:600;
+    animation:slideIn .35s ease;
+    border-left:5px solid #22c55e;
+}
+
+.toast.success{
+    border-left-color:#22c55e;
+}
+
+@keyframes slideIn{
+    from{
+        opacity:0;
+        transform:translateX(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
 </style>
 </head>
 
@@ -216,25 +250,42 @@ body{
     <form method="post">
     {% csrf_token %}
 
+    {{ form.non_field_errors }}
+
+    <div class="form-group">
+        <label>Full Name</label>
+        {{ form.full_name.errors }}
+        <input type="text" name="full_name" placeholder="Enter your full name" required>
+    </div>
+
+    <div class="form-group">
+        <label>Username</label>
+        {{ form.username.errors }}
+        <input type="text" name="username" placeholder="Choose a username" required>
+    </div>
+
     <div class="form-group">
         <label>Email</label>
-         <input type="email" name="email" placeholder="Enter your email" required>
+        {{ form.email.errors }}
+        <input type="email" name="email" placeholder="Enter your email" required>
     </div>
 
     <div class="form-group">
         <label>Password</label>
-        <input type="password" name="password1" placeholder="Password" required>
+        {{ form.password1.errors }}
+        <input type="password" name="password1" placeholder="Create a password" required>
     </div>
 
     <div class="form-group">
         <label>Confirm Password</label>
-        <input type="password" name="password2" placeholder="Confirm Password" required>
+        {{ form.password2.errors }}
+        <input type="password" name="password2" placeholder="Confirm your password" required>
     </div>
 
     <button type="submit" class="primary-btn">
         Create VibeStream Account
     </button>
-</form>
+    </form>
         <div class="divider">
             <span>OR</span>
         </div>
@@ -256,6 +307,25 @@ body{
     </a>
 
 </div>
+{% if messages %}
+<div id="toast-container">
+    {% for message in messages %}
+        <div class="toast {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
 
+<script>
+setTimeout(function(){
+    const container = document.getElementById("toast-container");
+    if(container){
+        container.style.transition = "opacity 0.5s ease";
+        container.style.opacity = "0";
+        setTimeout(()=>container.remove(), 500);
+    }
+}, 3500);
+</script>
 </body>
 </html>
