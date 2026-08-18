@@ -10,7 +10,8 @@ from .models import Movie, WatchList, ContinueWatching
 # Home Page
 # =========================
 def home(request):
-
+    print("DATABASE ENGINE:", settings.DATABASES["default"]["ENGINE"])
+    print("MOVIE COUNT:", Movie.objects.count())
     popular_movies = (
         Movie.objects
         .order_by("-popularity")[:50]
