@@ -6,8 +6,7 @@ import json
 import requests
 from django.conf import settings
 from .models import Movie, WatchList, ContinueWatching
-from .ai_search import semantic_search, get_similar_movies
-# =========================
+
 # Home Page
 # =========================
 def home(request):
@@ -78,7 +77,9 @@ def search(request):
     movies = Movie.objects.all()
 
     # AI semantic search
+    # AI semantic search
     if query:
+        from .ai_search import semantic_search
         ai_results = semantic_search(query, top_n=100)
         ids = [m.id for m in ai_results]
         movies = Movie.objects.filter(id__in=ids)
@@ -148,7 +149,7 @@ def search(request):
 def movie_detail(request, movie_id):
 
     movie = get_object_or_404(Movie, id=movie_id)
-
+    from .ai_search import get_similar_movies
     # AI-powered recommendations
     recommendations = get_similar_movies(
         movie.id,
