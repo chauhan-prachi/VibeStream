@@ -103,12 +103,26 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Local development → SQLite
 # Render → PostgreSQL through DATABASE_URL
 
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+#         conn_max_age=600,
+#     )
+# }
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+print("DATABASE_URL EXISTS:", bool(DATABASE_URL))
+
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
     )
 }
+
+print("DATABASE ENGINE:", DATABASES["default"]["ENGINE"])
+
 
 
 # =========================
@@ -259,28 +273,25 @@ DOMAIN = os.getenv(
 
 SITE_NAME = "VibeStream"
 
-
 # =========================
 # Production Security
 # =========================
 
-SESSION_COOKIE_SECURE = not DEBUG
-
-CSRF_COOKIE_SECURE = not DEBUG
-
-SECURE_SSL_REDIRECT = not DEBUG
-
-SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
-
-SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-
-SECURE_HSTS_PRELOAD = not DEBUG
-
-SECURE_REFERRER_POLICY = "same-origin"
-
-
 if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
     SECURE_PROXY_SSL_HEADER = (
         "HTTP_X_FORWARDED_PROTO",
         "https",
     )
+
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+else:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
+SECURE_REFERRER_POLICY = "same-origin"
