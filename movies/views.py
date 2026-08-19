@@ -13,7 +13,15 @@ from django.db.models import Case, When
 # =========================
 def home(request):
     print("DATABASE ENGINE:", settings.DATABASES["default"]["ENGINE"])
-    print("MOVIE COUNT:", Movie.objects.count())
+    print(
+    "MOVIE COUNT:",
+    Movie.objects.filter(media_type="movie").count()
+)
+
+    print(
+    "TV COUNT:",
+    Movie.objects.filter(media_type="tv").count()
+)    
     popular_movies = (
         Movie.objects
         .order_by("-popularity")[:50]
