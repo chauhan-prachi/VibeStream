@@ -139,6 +139,7 @@ class Command(BaseCommand):
                     Movie.objects.update_or_create(
 
                         tmdb_id=item["id"],
+                        media_type=media_type,
 
                         defaults={
 

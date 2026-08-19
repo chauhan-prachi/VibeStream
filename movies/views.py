@@ -6,6 +6,7 @@ import json
 import requests
 from django.conf import settings
 from .models import Movie, WatchList, ContinueWatching
+from django.db.models import Case, When
 
 # Home Page
 # =========================
@@ -67,6 +68,7 @@ def home(request):
 # =========================
 
 def search(request):
+
     query = request.GET.get("q", "").strip()
     genre = request.GET.get("genre", "").strip()
     year = request.GET.get("year", "").strip()
@@ -74,53 +76,139 @@ def search(request):
     rating = request.GET.get("rating", "").strip()
     sort = request.GET.get("sort", "").strip()
 
+    # ---------------------------------
     # Start with all movies
+    # ---------------------------------
+
     movies = Movie.objects.all()
 
-    # AI semantic search
-    if query:
-        from .ai_search import semantic_search
-        ai_results = semantic_search(query, top_n=50)
-        ids = [m.id for m in ai_results]
-        movies = Movie.objects.filter(id__in=ids)
+    # ---------------------------------
+    # AI SEMANTIC SEARCH
+    # ---------------------------------
 
-    # Filters
+    if query:
+
+        from .ai_search import semantic_search
+
+        ai_results = semantic_search(
+            query,
+            top_n=100
+        )
+
+        ids = [movie.id for movie in ai_results]
+
+        if ids:
+            # Preserve AI relevance order
+            preserved_order = Case(
+                *[
+                    When(id=movie_id, then=position)
+                    for position, movie_id in enumerate(ids)
+                ]
+            )
+
+            movies = Movie.objects.filter(
+                id__in=ids
+            ).order_by(
+                preserved_order
+            )
+
+        else:
+            movies = Movie.objects.none()
+
+    # ---------------------------------
+    # GENRE FILTER
+    # ---------------------------------
+
     if genre:
-        movies = movies.filter(genre__icontains=genre)
+        movies = movies.filter(
+            genre__icontains=genre
+        )
+
+    # ---------------------------------
+    # YEAR FILTER
+    # ---------------------------------
 
     if year:
-        movies = movies.filter(release_year=year)
+        try:
+            movies = movies.filter(
+                release_year=int(year)
+            )
+        except (ValueError, TypeError):
+            pass
+
+    # ---------------------------------
+    # LANGUAGE FILTER
+    # ---------------------------------
 
     if language:
-        movies = movies.filter(language__iexact=language)
+        movies = movies.filter(
+            language__iexact=language
+        )
+
+    # ---------------------------------
+    # RATING FILTER
+    # ---------------------------------
 
     if rating:
-        movies = movies.filter(rating__gte=float(rating))
+        try:
+            movies = movies.filter(
+                rating__gte=float(rating)
+            )
+        except (ValueError, TypeError):
+            pass
 
-    # Sorting
+    # ---------------------------------
+    # SORTING
+    # ---------------------------------
+
     if sort == "rating":
-        movies = movies.order_by("-rating")
-    elif sort == "year":
-        movies = movies.order_by("-release_year")
-    else:
-        movies = movies.order_by("-popularity")
 
-    # Dropdown values
+        movies = movies.order_by(
+            "-rating"
+        )
+
+    elif sort == "year":
+
+        movies = movies.order_by(
+            "-release_year"
+        )
+
+    elif sort == "popularity":
+
+        movies = movies.order_by(
+            "-popularity"
+        )
+
+    elif not query:
+
+        movies = movies.order_by(
+            "-popularity"
+        )
+
+    # ---------------------------------
+    # DROPDOWN VALUES
+    # ---------------------------------
+
     genres = (
-        Movie.objects.exclude(genre="")
+        Movie.objects
+        .exclude(genre__isnull=True)
+        .exclude(genre="")
         .values_list("genre", flat=True)
         .distinct()
     )
 
     years = (
-        Movie.objects.exclude(release_year__isnull=True)
+        Movie.objects
+        .exclude(release_year__isnull=True)
         .values_list("release_year", flat=True)
         .distinct()
         .order_by("-release_year")
     )
 
     languages = (
-        Movie.objects.exclude(language="")
+        Movie.objects
+        .exclude(language__isnull=True)
+        .exclude(language="")
         .values_list("language", flat=True)
         .distinct()
     )
@@ -131,9 +219,11 @@ def search(request):
         {
             "movies": movies,
             "query": query,
+
             "genres": genres,
             "years": years,
             "languages": languages,
+
             "selected_genre": genre,
             "selected_year": year,
             "selected_language": language,
@@ -141,16 +231,20 @@ def search(request):
             "selected_sort": sort,
         },
     )
-
 # =========================
 # Movie Detail Page
 # =========================
 
 def movie_detail(request, movie_id):
 
-    movie = get_object_or_404(Movie, id=movie_id)
+    movie = get_object_or_404(
+        Movie,
+        id=movie_id
+    )
+
     from .ai_search import get_similar_movies
-    # AI-powered recommendations
+
+    
     recommendations = get_similar_movies(
         movie.id,
         top_n=10,
@@ -164,7 +258,6 @@ def movie_detail(request, movie_id):
             "recommendations": recommendations,
         },
     )
-
 
 # =========================
 # Watch Page

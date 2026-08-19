@@ -221,12 +221,8 @@ h1{
         </select>
 
     </div>
-
-</form>
-{% if query %}
-
-    {% if movies %}
-
+    </form>
+{% if movies %}
     <div class="grid">
 
         {% for movie in movies %}
@@ -235,23 +231,21 @@ h1{
 
     </div>
 
-    {% else %}
-
-    <p class="empty">
-    No AI matches found for <strong>“{{ query }}”</strong>.<br>
-    Try a mood, genre, or description such as
-    <em>“space adventure”</em>,
-    <em>“crime family drama”</em>, or
-    <em>“feel-good comedy”</em>.
-</p>
-
-    {% endif %}
-
 {% else %}
 
-<p class="empty">
-    Start typing a movie or TV show name to search your VibeStream library.
-</p>
+    {% if query or selected_genre or selected_year or selected_language or selected_rating %}
+
+        <p class="empty">
+            No movies found matching your selected filters.
+        </p>
+
+    {% else %}
+
+        <p class="empty">
+            Start typing a movie or TV show name to search your VibeStream library.
+        </p>
+
+    {% endif %}
 
 {% endif %}
 

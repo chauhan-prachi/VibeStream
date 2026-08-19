@@ -2,37 +2,25 @@ import re
 
 from .models import Movie
 
-# AI SEARCH STATE
-print("MOVIE COUNT:", Movie.objects.count())
-_model = None
-_embeddings = None
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+
+# =========================================================
+# SEARCH STATE
+# =========================================================
+
+_vectorizer = None
+_movie_matrix = None
 _movies = None
 
-# LOAD MODEL
 
-def get_model():
-    
-
-    global _model
-
-    if _model is None:
-        # Import 
-
-        from sentence_transformers import SentenceTransformer
-
-        _model = SentenceTransformer(
-            "all-MiniLM-L6-v2"
-        )
-
-    return _model
-
+# =========================================================
 # MOVIE DOCUMENT
+# =========================================================
 
 def movie_to_text(movie):
-    """
-    Convert movie information into one meaningful
-    text document for semantic search.
-    """
+    
 
     return " ".join([
         f"Title: {movie.title or ''}",
@@ -44,24 +32,24 @@ def movie_to_text(movie):
     ])
 
 
+# =========================================================
 # BUILD SEARCH INDEX
+# =========================================================
 
 def build_search_index():
-    """
-    Load movies from PostgreSQL/SQLite and create
-    their embeddings once per worker.
-    """
+    
 
-    global _embeddings, _movies
-
-    model = get_model()
+    global _vectorizer
+    global _movie_matrix
+    global _movies
 
     _movies = list(
         Movie.objects.all()
     )
 
     if not _movies:
-        _embeddings = None
+        _vectorizer = None
+        _movie_matrix = None
         return
 
     documents = [
@@ -69,17 +57,22 @@ def build_search_index():
         for movie in _movies
     ]
 
-    _embeddings = model.encode(
-        documents,
-        convert_to_tensor=True,
-        normalize_embeddings=True,
-        show_progress_bar=False,
+    _vectorizer = TfidfVectorizer(
+        stop_words="english",
+        ngram_range=(1, 2),
+        max_features=10000,
     )
 
+    _movie_matrix = _vectorizer.fit_transform(
+        documents
+    )
+
+
+# =========================================================
 # KEYWORD MATCHING
+# =========================================================
 
 def keyword_score(query, movie):
-    
 
     query_words = set(
         re.findall(
@@ -91,94 +84,90 @@ def keyword_score(query, movie):
     if not query_words:
         return 0.0
 
-    movie_text = " ".join([
-        movie.title or "",
-        movie.genre or "",
-        movie.overview or "",
-        movie.language or "",
-        movie.director or "",
-        movie.cast or "",
-    ]).lower()
+    movie_text = movie_to_text(
+        movie
+    ).lower()
 
     matched = 0
 
     for word in query_words:
+
         if word in movie_text:
             matched += 1
 
     return matched / len(query_words)
 
 
-# AI SEMANTIC SEARCH
+# =========================================================
+# SEARCH
+# =========================================================
 
 def semantic_search(query, top_n=30):
-    
 
-    global _embeddings, _movies
+    global _vectorizer
+    global _movie_matrix
+    global _movies
 
     query = (query or "").strip()
 
     if not query:
         return []
 
-    # Build index only when required.
-    if _embeddings is None or _movies is None:
+    # Build the index when needed.
+    if (
+        _vectorizer is None
+        or _movie_matrix is None
+        or _movies is None
+    ):
         build_search_index()
 
-    if not _movies or _embeddings is None:
+    if not _movies:
         return []
 
-    model = get_model()
-
-    #  user's query.
-    query_embedding = model.encode(
-        query,
-        convert_to_tensor=True,
-        normalize_embeddings=True,
+    # Convert query to TF-IDF vector.
+    query_vector = _vectorizer.transform(
+        [query]
     )
 
-    from sentence_transformers import util
-
-    semantic_scores = util.cos_sim(
-        query_embedding,
-        _embeddings
+    # Calculate similarity against all movies.
+    similarities = cosine_similarity(
+        query_vector,
+        _movie_matrix
     )[0]
 
-   
     candidate_count = min(
         100,
         len(_movies)
     )
 
-    top_results = semantic_scores.topk(
-        k=candidate_count
-    )
+    candidate_indices = similarities.argsort()[
+        -candidate_count:
+    ][::-1]
 
     ranked_movies = []
 
-    for idx, semantic_score in zip(
-        top_results.indices,
-        top_results.values
-    ):
-        idx = int(idx)
+    for index in candidate_indices:
 
-        movie = _movies[idx]
+        movie = _movies[index]
 
-        semantic_score = float(
-            semantic_score
+        similarity = float(
+            similarities[index]
         )
 
-        # Keyword relevance.
         keyword = keyword_score(
             query,
             movie
         )
 
-        
+        # Combined score.
         final_score = (
-            semantic_score * 0.85
+            similarity * 0.85
             + keyword * 0.15
         )
+
+        # Don't return completely unrelated movies.
+        if final_score <= 0:
+            continue
 
         ranked_movies.append(
             (
@@ -193,25 +182,31 @@ def semantic_search(query, top_n=30):
         reverse=True
     )
 
-   
-    results = [
+    return [
         movie
-        for score, movie in ranked_movies[:top_n]
+        for score, movie
+        in ranked_movies[:top_n]
     ]
 
-    return results
 
-
+# =========================================================
 # SIMILAR MOVIES
+# =========================================================
 
 def get_similar_movies(movie_id, top_n=10):
-   
-    global _embeddings, _movies
 
-    if _embeddings is None or _movies is None:
+    global _vectorizer
+    global _movie_matrix
+    global _movies
+
+    if (
+        _vectorizer is None
+        or _movie_matrix is None
+        or _movies is None
+    ):
         build_search_index()
 
-    if not _movies or _embeddings is None:
+    if not _movies:
         return []
 
     # Find target movie.
@@ -226,40 +221,37 @@ def get_similar_movies(movie_id, top_n=10):
     if target_index is None:
         return []
 
-    from sentence_transformers import util
-
-    target_embedding = _embeddings[
+    target_vector = _movie_matrix[
         target_index
     ]
 
-    scores = util.cos_sim(
-        target_embedding,
-        _embeddings
+    similarities = cosine_similarity(
+        target_vector,
+        _movie_matrix
     )[0]
 
-    # +1 because the movie itself will be removed.
     result_count = min(
         top_n + 1,
         len(_movies)
     )
 
-    top_results = scores.topk(
-        k=result_count
-    )
+    candidate_indices = similarities.argsort()[
+        -result_count:
+    ][::-1]
 
     recommendations = []
 
-    for idx in top_results.indices:
+    for index in candidate_indices:
 
-        idx = int(idx)
+        movie = _movies[index]
 
-        movie = _movies[idx]
-
-        # not recommend the same movie.
+        # Don't recommend the same movie.
         if movie.id == movie_id:
             continue
 
-        recommendations.append(movie)
+        recommendations.append(
+            movie
+        )
 
         if len(recommendations) >= top_n:
             break

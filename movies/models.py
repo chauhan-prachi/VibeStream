@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Movie(models.Model):
 
     # TMDb
-    tmdb_id = models.IntegerField(unique=True)
+    tmdb_id = models.IntegerField()
 
     # Movie or TV
     media_type = models.CharField(
@@ -99,6 +99,14 @@ class Movie(models.Model):
         max_length=100,
         blank=True
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["tmdb_id", "media_type"],
+                name="unique_tmdb_media_type"
+            )
+        ]
 
     def __str__(self):
         return self.title
