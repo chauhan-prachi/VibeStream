@@ -8,6 +8,9 @@ from django.conf import settings
 from .models import Movie, WatchList, ContinueWatching
 from django.db.models import Case, When
 
+print("DATABASE ENGINE:", settings.DATABASES["default"]["ENGINE"])
+print("MOVIE COUNT:", Movie.objects.count())
+print("TV COUNT:", Movie.objects.filter(media_type="tv").count())
 # Home Page
 # =========================
 def home(request):
