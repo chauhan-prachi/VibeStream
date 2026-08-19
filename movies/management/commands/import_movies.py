@@ -462,3 +462,10 @@ class Command(BaseCommand):
                 f"items successfully!"
             )
         )
+        self.stdout.write(
+        f"FINAL MOVIE COUNT: {Movie.objects.filter(media_type='movie').count()}"
+)
+
+        self.stdout.write(
+        f"FINAL TV COUNT: {Movie.objects.filter(media_type='tv').count()}"
+)
