@@ -82,15 +82,27 @@ def home(request):
     )
 
     # =========================
-    # Trending Now / Hero Movies
+    # Trending TV Shows
     # =========================
-    #
-    # Get the 5 most popular MOVIES
-    # that have both poster and backdrop.
-    #
-    # Do NOT depend only on category="Popular".
-    # This makes the hero section much more reliable
-    # when the database grows.
+
+    trending_tv = (
+        Movie.objects
+        .filter(media_type="tv")
+        .order_by("-popularity")[:50]
+    )
+
+    # =========================
+    # Top TV Series
+    # =========================
+
+    top_series = (
+        Movie.objects
+        .filter(media_type="tv")
+        .order_by("-rating")[:50]
+    )
+
+    # =========================
+    # Trending Now / Hero Movies
     # =========================
 
     featured_movies = list(
@@ -156,6 +168,10 @@ def home(request):
         "top_rated_movies": top_rated_movies,
         "now_playing_movies": now_playing_movies,
         "upcoming_movies": upcoming_movies,
+
+        # TV
+        "trending_tv": trending_tv,
+        "top_series": top_series,
 
         "watchlist_ids": watchlist_ids,
     }
@@ -818,3 +834,125 @@ def save_progress(request, movie_id):
     ) 
  
     return JsonResponse({"status": "ok"})   
+
+   # =========================
+# Browse / See All Pages
+# =========================
+
+def browse(request, section):
+
+    watchlist_ids = set()
+
+    if request.user.is_authenticated:
+        watchlist_ids = set(
+            WatchList.objects
+            .filter(user=request.user)
+            .values_list("movie_id", flat=True)
+        )
+
+    # =========================
+    # Trending Movies
+    # =========================
+
+    if section == "trending":
+
+        movies = (
+            Movie.objects
+            .filter(media_type="movie")
+            .order_by("-popularity")
+        )
+
+        title = "🔥 Trending Movies"
+
+    # =========================
+    # Trending TV
+    # =========================
+
+    elif section == "trending_tv":
+
+        movies = (
+            Movie.objects
+            .filter(media_type="tv")
+            .order_by("-popularity")
+        )
+
+        title = "📺 Trending TV Shows"
+
+    # =========================
+    # Top Movies
+    # =========================
+
+    elif section == "top_movies":
+
+        movies = (
+            Movie.objects
+            .filter(media_type="movie")
+            .order_by("-rating", "-vote_count")
+        )
+
+        title = "🏆 Top Movies This Week"
+
+    # =========================
+    # Now Playing
+    # =========================
+
+    elif section == "now_playing":
+
+        movies = (
+            Movie.objects
+            .filter(
+                media_type="movie",
+                category="Now Playing"
+            )
+            .order_by("-popularity")
+        )
+
+        title = "🎭 Now Playing in Theaters"
+
+    # =========================
+    # Top Series
+    # =========================
+
+    elif section == "top_series":
+
+        movies = (
+            Movie.objects
+            .filter(media_type="tv")
+            .order_by("-rating", "-vote_count")
+        )
+
+        title = "⭐ Top Series This Week"
+
+    # =========================
+    # Dramas
+    # =========================
+
+    elif section == "dramas":
+
+        movies = (
+            Movie.objects
+            .filter(
+                genre__icontains="Drama"
+            )
+            .order_by("-popularity")
+        )
+
+        title = "🎭 Dramas"
+
+    # =========================
+    # Invalid Section
+    # =========================
+
+    else:
+
+        return redirect("home")
+
+    return render(
+        request,
+        "movies/browse.html",
+        {
+            "movies": movies,
+            "title": title,
+            "watchlist_ids": watchlist_ids,
+        },
+    )

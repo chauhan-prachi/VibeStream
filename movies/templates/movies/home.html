@@ -653,7 +653,9 @@
 
     <div class="section-header">
         <h2>🔥 Trending Movies</h2>
-        <span class="see-all">See All →</span>
+        <a href="{% url 'trending_movies' %}" class="see-all">
+    See All →
+</a>
     </div>
 
     <div class="carousel">
@@ -689,7 +691,9 @@
 
     <div class="section-header">
         <h2>🏆 Top Movies This Week</h2>
-        <span class="see-all">See All →</span>
+        <a href="{% url 'top_movies' %}" class="see-all">
+    See All →
+</a>
     </div>
 
     <div class="carousel">
@@ -726,7 +730,9 @@
 
     <div class="section-header">
         <h2>🎭 Now Playing in Theaters</h2>
-        <span class="see-all">See All →</span>
+        <a href="{% url 'now_playing' %}" class="see-all">
+    See All →
+</a>
     </div>
 
     <div class="carousel">
@@ -762,7 +768,9 @@
 
     <div class="section-header">
         <h2>📺 Trending TV Shows</h2>
-        <span class="see-all">See All →</span>
+     <a href="{% url 'trending_tv' %}" class="see-all">
+    See All →
+</a>
     </div>
 
     <div class="carousel">
@@ -771,9 +779,10 @@
 
         <div class="movie-row" id="tv-row">
 
-            {% for movie in popular_movies|slice:":12" %}
+            {% for movie in trending_tv|slice:":12" %}
 
             {% include "movies/components/movie_card.html" %}
+
             {% endfor %}
 
         </div>
@@ -792,7 +801,9 @@
 
     <div class="section-header">
         <h2>⭐ Top Series This Week</h2>
-        <span class="see-all">See All →</span>
+        <a href="{% url 'top_series' %}" class="see-all">
+    See All →
+</a>
     </div>
 
     <div class="carousel">
@@ -822,7 +833,9 @@
 
     <div class="section-header">
         <h2>🎭 Dramas</h2>
-        <span class="see-all">See All →</span>
+         <a href="{% url 'dramas' %}" class="see-all">
+    See All →
+</a>
     </div>
 
     <div class="carousel">

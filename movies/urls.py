@@ -22,4 +22,11 @@ urlpatterns = [
     path("watch/<int:movie_id>/", views.watch_movie, name="watch_movie"),
     path("progress/<int:movie_id>/", views.save_progress, name="save_progress"),
     path("watchlist/toggle/<int:movie_id>/",views.toggle_watchlist,name="toggle_watchlist",),
+    path("trending/", views.browse, {"section": "trending"}, name="trending_movies"),
+    path("trending-tv/", views.browse, {"section": "trending_tv"}, name="trending_tv"),
+    path("top-movies/", views.browse, {"section": "top_movies"}, name="top_movies"),
+    path("now-playing/", views.browse, {"section": "now_playing"}, name="now_playing"),
+    path("top-series/", views.browse, {"section": "top_series"}, name="top_series"),
+    path("dramas/", views.browse, {"section": "dramas"}, name="dramas"),    
+    
 ]

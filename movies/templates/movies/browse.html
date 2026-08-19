@@ -1,0 +1,124 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ title }} - VibeStream</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/movie_card.css' %}">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#111;
+            color:white;
+            font-family:Arial,sans-serif;
+        }
+
+        .back{
+            display:inline-block;
+            margin:25px 40px;
+            color:#e50914;
+            text-decoration:none;
+            font-size:18px;
+            font-weight:bold;
+        }
+
+        .back:hover{
+            text-decoration:underline;
+        }
+
+        .page{
+            padding:20px 40px 60px;
+        }
+
+        .page-title{
+            font-size:36px;
+            margin-bottom:30px;
+        }
+
+        .movie-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill, 180px);
+            gap:30px 20px;
+        }
+
+        .empty{
+            color:#aaa;
+            font-size:18px;
+            margin-top:30px;
+        }
+
+        @media(max-width:700px){
+
+            .back{
+                margin:20px;
+            }
+
+            .page{
+                padding:20px;
+            }
+
+            .page-title{
+                font-size:28px;
+            }
+
+            .movie-grid{
+                grid-template-columns:repeat(2, 180px);
+                justify-content:center;
+                gap:25px 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <a href="{% url 'home' %}" class="back">
+        ← Back to VibeStream
+    </a>
+
+    <main class="page">
+
+        <h1 class="page-title">
+            {{ title }}
+        </h1>
+
+        <div class="movie-grid">
+
+            {% for movie in movies %}
+
+                {% include "movies/components/movie_card.html" %}
+
+            {% empty %}
+
+                <p class="empty">
+                    No content available right now.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
