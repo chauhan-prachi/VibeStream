@@ -1,96 +1,155 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TV Shows - VibeStream</title>
 
-<link rel="stylesheet" href="{% static 'css/movie_card.css' %}">
+    <meta charset="UTF-8">
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-body{
-    background:#050810;
-    color:white;
-}
+    <title>TV Shows - VibeStream</title>
 
-.container{
-    max-width:1400px;
-    margin:30px auto;
-    padding:20px;
-}
+    <link rel="stylesheet"
+          href="{% static 'css/movie_card.css' %}">
 
-.back-btn{
-    display:inline-block;
-    margin-bottom:25px;
-    padding:12px 20px;
-    background:#e50914;
-    color:white;
-    text-decoration:none;
-    border-radius:10px;
-    font-weight:bold;
-}
+    <style>
 
-h1{
-    font-size:42px;
-    margin-bottom:10px;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-.subtitle{
-    color:#aab1bb;
-    margin-bottom:30px;
-    font-size:18px;
-}
+        body {
+            background: #050810;
+            color: white;
+            min-height: 100vh;
+        }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,180px);
-    gap:20px;
-    justify-content:start;
-}
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
 
-.empty{
-    color:#bbb;
-    font-size:18px;
-    text-align:center;
-    margin-top:60px;
-}
-</style>
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 25px;
+            padding: 12px 20px;
+            background: #e50914;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #b20710;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #aab1bb;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .tv-count {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fill,
+                minmax(180px, 1fr)
+            );
+
+            gap: 25px;
+        }
+
+        .empty {
+            color: #bbb;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .grid {
+                grid-template-columns:
+                    repeat(2, minmax(140px, 1fr));
+
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-<a href="{% url 'home' %}" class="back-btn">← Back to Home</a>
+    <a href="{% url 'home' %}" class="back-btn">
+        ← Back to Home
+    </a>
 
-<h1>📺 TV Shows</h1>
-<p class="subtitle">Browse popular TV shows available on VibeStream</p>
+    <h1>📺 TV Shows</h1>
 
-{% if tv_shows %}
+    <p class="subtitle">
+        Browse popular TV shows available on VibeStream
+    </p>
 
-<div class="grid">
+    <p class="tv-count">
+        {{ tv_shows.count }} TV shows available
+    </p>
 
-    {% for movie in tv_shows %}
-        {% include "movies/components/movie_card.html" %}
-    {% endfor %}
 
-</div>
+    {% if tv_shows %}
 
-{% else %}
+        <div class="grid">
 
-<p class="empty">No TV shows available in your VibeStream library.</p>
+            {% for movie in tv_shows %}
 
-{% endif %}
+                {% include "movies/components/movie_card.html" %}
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p class="empty">
+            No TV shows available in your VibeStream library.
+        </p>
+
+    {% endif %}
 
 </div>
 
 </body>
+
 </html>

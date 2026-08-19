@@ -1,8 +1,33 @@
+{% load static %}
 <div class="movie-card">
 
-    <a href="{% url 'movie_detail' movie.id %}">
-        <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
-    </a>
+
+   <a href="{% url 'movie_detail' movie.id %}">
+
+    {% if movie.poster_url %}
+
+        <img
+            src="{{ movie.poster_url }}"
+            alt="{{ movie.title }}"
+            loading="lazy"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        >
+
+        <div class="poster-placeholder" style="display:none;">
+            <span>🎬</span>
+            <p>{{ movie.title }}</p>
+        </div>
+
+    {% else %}
+
+        <div class="poster-placeholder">
+            <span>🎬</span>
+            <p>{{ movie.title }}</p>
+        </div>
+
+    {% endif %}
+
+</a>
     {% if user.is_authenticated %}
 <a href="{% url 'toggle_watchlist' movie.id %}"
    class="watchlist-heart"

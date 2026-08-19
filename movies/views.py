@@ -244,11 +244,51 @@ def movie_detail(request, movie_id):
 
     from .ai_search import get_similar_movies
 
-    
     recommendations = get_similar_movies(
         movie.id,
         top_n=10,
     )
+
+    # =========================
+    # Fetch Cast From TMDb
+    # =========================
+
+    cast_members = []
+
+    try:
+        import requests
+        from django.conf import settings
+
+        media_type = movie.media_type or "movie"
+
+        url = (
+            f"https://api.themoviedb.org/3/"
+            f"{media_type}/{movie.tmdb_id}/credits"
+        )
+
+        response = requests.get(
+            url,
+            params={
+                "api_key": settings.TMDB_API_KEY,
+            },
+            timeout=10,
+        )
+
+        if response.status_code == 200:
+
+            data = response.json()
+
+            cast_members = data.get(
+                "cast",
+                []
+            )[:10]
+
+    except Exception as e:
+
+        print(
+            "TMDb cast error:",
+            e
+        )
 
     return render(
         request,
@@ -256,9 +296,9 @@ def movie_detail(request, movie_id):
         {
             "movie": movie,
             "recommendations": recommendations,
+            "cast_members": cast_members,
         },
     )
-
 # =========================
 # Watch Page
 # =========================
@@ -521,26 +561,35 @@ def categories_page(request):
         }, 
     ) 
  
- 
-# ========================= 
-# TV Page 
-# ========================= 
- 
-def tv_page(request): 
- 
-    tv_shows = ( 
-        Movie.objects 
-        .filter(media_type="tv") 
-        .order_by("-popularity") 
-    ) 
- 
-    return render( 
-        request, 
-        "movies/tv.html", 
-        { 
-            "tv_shows": tv_shows, 
-        }, 
-    ) 
+ # =========================
+# TV Page
+# =========================
+
+def tv_page(request):
+
+    tv_shows = (
+        Movie.objects
+        .filter(media_type="tv")
+        .order_by("-popularity")
+    )
+
+    watchlist_ids = set()
+
+    if request.user.is_authenticated:
+        watchlist_ids = set(
+            WatchList.objects
+            .filter(user=request.user)
+            .values_list("movie_id", flat=True)
+        )
+
+    return render(
+        request,
+        "movies/tv.html",
+        {
+            "tv_shows": tv_shows,
+            "watchlist_ids": watchlist_ids,
+        },
+    )
  
  
 # =========================
