@@ -2,14 +2,10 @@
 
 # 🎬 VibeStream
 
-### Streaming Content Discovery, Analytics & Recommendation Platform
+### Movie & TV Discovery Platform with Semantic Search and Personalization
 
 <p>
-  <strong>
-    Discover movies and TV shows, search content, explore trending titles,
-    manage your watchlist, and continue watching through a modern
-    streaming-style platform.
-  </strong>
+  <strong>A Django-based streaming-style platform for discovering movies and TV shows, searching content, exploring recommendations, and managing a personal watchlist.</strong>
 </p>
 
 <br>
@@ -27,13 +23,9 @@
 <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
 <img src="https://img.shields.io/badge/Django-5.2-092E20?style=flat-square&logo=django&logoColor=white" alt="Django">
 <img src="https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
-<img src="https://img.shields.io/badge/TMDb-API-01B4E4?style=flat-square&logo=themoviedatabase&logoColor=white" alt="TMDb">
-<img src="https://img.shields.io/badge/Scikit--learn-ML-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" alt="Scikit-learn">
+<img src="https://img.shields.io/badge/SQLite-Local%20DB-003B57?style=flat-square&logo=sqlite&logoColor=white" alt="SQLite">
+<img src="https://img.shields.io/badge/TMDb-API-01B4E4?style=flat-square" alt="TMDb">
 <img src="https://img.shields.io/badge/Render-Deployed-46E3B7?style=flat-square&logo=render&logoColor=black" alt="Render">
-
-<br><br>
-
-> **VibeStream** is a full-stack Django web application built to explore and organize movie and TV content through a modern streaming-style interface. It combines external movie data, database-backed content discovery, search and filtering, user authentication, watchlists, viewing progress, and recommendation-oriented features into a single platform.
 
 </div>
 
@@ -41,179 +33,179 @@
 
 ## 🌐 Live Demo
 
-🚀 **Try VibeStream:**
+🚀 **VibeStream:**
+https://vibestream-0k2c.onrender.com
 
-**https://vibestream-0k2c.onrender.com**
+💻 **Source Code:**
+https://github.com/prachi912/VibeStream
 
-📦 **Source Code:**
-
-**https://github.com/prachi912/VibeStream**
-
-> VibeStream is deployed on Render with PostgreSQL used as the production database.
+VibeStream is deployed on **Render** with **PostgreSQL** used for the production database.
 
 ---
 
-# 📸 Application Preview
-
-> Screenshots can be added to this section later. GitHub repository screenshots are recommended because they allow recruiters to quickly understand the project visually.
+## 📸 Application Preview
 
 ### 🏠 Home & Content Discovery
 
-*Add a screenshot of the VibeStream home page here.*
+![VibeStream Home Page](screenshots/home.png)
 
-The home page provides a streaming-style interface with featured content, trending movies, top-rated titles, now-playing content, upcoming releases, and TV sections.
+The home page provides a streaming-style interface for discovering trending, popular, top-rated, currently playing and upcoming content.
 
 ---
 
 ### 🔎 Search & Filtering
 
-*Add a screenshot of the search page here.*
+![VibeStream Search](screenshots/search.png)
 
-Users can search the content catalog and narrow results using available filters such as genre, year, language, rating, and sorting options.
+The search system supports natural-language queries along with filters such as genre, year, language and rating.
 
 ---
 
 ### 🎬 Movie Details
 
-*Add a screenshot of a movie detail page here.*
+![VibeStream Movie Details](screenshots/movie-details.png)
 
-The movie detail page presents information such as title, overview, rating, release year, genres, cast, director, poster, backdrop, and trailer information.
+The movie details page displays information such as ratings, genres, overview, cast, director, release information and available trailer options.
 
 ---
 
 ### 📺 TV Shows
 
-*Add a screenshot of the TV Shows page here.*
+![VibeStream TV Shows](screenshots/tv-shows.png)
 
-The TV section provides a dedicated discovery experience for television content.
-
----
-
-### ❤️ Watchlist
-
-*Add a screenshot of the Watchlist page here.*
-
-Authenticated users can save movies and TV shows to their personal watchlist.
+A dedicated section allows users to explore TV content separately from movies.
 
 ---
 
-### 👤 Profile & Authentication
+## ✨ Key Features
 
-*Add a screenshot of the profile/authentication interface here.*
-
-Users can create accounts, log in, manage their profile, and use Google authentication.
-
----
-
-# ✨ Features
-
-| Feature                         | Description                                                                         |
-| ------------------------------- | ----------------------------------------------------------------------------------- |
-| 🎬 **Movie Discovery**          | Browse popular, top-rated, upcoming, and currently playing movies                   |
-| 📺 **TV Show Discovery**        | Explore TV content through a dedicated discovery section                            |
-| 🔎 **Search & Filtering**       | Search and filter content using multiple criteria                                   |
-| 🎯 **Content Recommendations**  | Recommendation-oriented functionality based on movie metadata and user interactions |
-| 🔥 **Trending Hero Section**    | Rotating featured movies with cinematic backdrop images                             |
-| ❤️ **Watchlist / My List**      | Save movies and shows for later                                                     |
-| ▶️ **Continue Watching**        | Track viewing progress and resume content                                           |
-| 🔐 **User Authentication**      | User registration, login, logout, and account management                            |
-| 🔑 **Google OAuth**             | Google authentication through Django Allauth                                        |
-| 🎞️ **Movie Details**           | Display ratings, genres, cast, directors, descriptions, and metadata                |
-| 🎥 **Trailer Support**          | Display available trailer content                                                   |
-| 🗂️ **Categories**              | Organized content discovery through multiple categories                             |
-| 📱 **Responsive UI**            | Streaming-inspired interface for different screen sizes                             |
-| ☁️ **Cloud Deployment**         | Production deployment using Render and PostgreSQL                                   |
-| 🗄️ **Database-backed Catalog** | Movie and TV metadata stored and queried through Django ORM                         |
+| Feature                      | Description                                                      |
+| ---------------------------- | ---------------------------------------------------------------- |
+| 🎬 **Movie Discovery**       | Browse popular, top-rated, upcoming and currently playing movies |
+| 📺 **TV Discovery**          | Explore trending and popular TV shows                            |
+| 🔎 **Semantic Search**       | Search content using natural-language descriptions               |
+| 🧠 **Content Similarity**    | Find similar movies using TF-IDF and cosine similarity           |
+| 🎯 **Search Filters**        | Filter content by genre, year, language and rating               |
+| 📊 **Search Ranking**        | Rank results using similarity, keywords and content metadata     |
+| 🔥 **Trending Content**      | Streaming-style featured content and discovery sections          |
+| ❤️ **Watchlist**             | Save movies and shows for later                                  |
+| ▶️ **Continue Watching**     | Store and restore viewing progress                               |
+| 🔐 **Authentication**        | Registration, login, logout and account management               |
+| 🔑 **Google Login**          | Google OAuth through Django Allauth                              |
+| 🎞️ **Movie Details**        | Detailed information about movies and TV content                 |
+| ▶️ **Trailer Playback**      | Play available trailers through YouTube                          |
+| 🗂️ **Categories**           | Browse content through dedicated category pages                  |
+| ☁️ **Production Deployment** | Django application deployed on Render with PostgreSQL            |
 
 ---
 
-# 🎯 How VibeStream Works
+## 🧠 Semantic Search
+
+One of the main technical components of VibeStream is its semantic-style search system.
+
+Instead of relying only on exact movie titles, the application creates searchable text from movie metadata such as:
 
 ```text
-                         ┌─────────────────────┐
-                         │      VibeStream     │
-                         │   Web Application   │
-                         └──────────┬──────────┘
-                                    │
-                ┌───────────────────┼───────────────────┐
-                │                   │                   │
-                ▼                   ▼                   ▼
-          🔎 Search            🎬 Discovery          👤 Account
-                │                   │                   │
-                ▼                   ▼                   ▼
-        Search & Filters      Movie / TV Data     Authentication
-                │             & Categories        & Watchlist
-                │                   │                   │
-                └───────────────────┼───────────────────┘
-                                    ▼
-                          ┌──────────────────┐
-                          │ Django Backend   │
-                          └────────┬─────────┘
-                                   │
-                  ┌────────────────┼────────────────┐
-                  │                │                │
-                  ▼                ▼                ▼
-              TMDb API       PostgreSQL        ML / Search
-                  │                │                │
-                  └────────────────┼────────────────┘
-                                   ▼
-                         🎬 Content Results
+Title
+Genre
+Overview
+Language
+Director
+Cast
 ```
 
+The search process works approximately as follows:
+
+```text
+Movie Metadata
+      ↓
+Text Representation
+      ↓
+TF-IDF Vectorization
+      ↓
+User Query Vector
+      ↓
+Cosine Similarity
+      ↓
+Keyword Matching
+      ↓
+Combined Relevance Score
+      ↓
+Ranked Results
+```
+
+The implementation uses **TfidfVectorizer** and **cosine_similarity** from Scikit-learn.
+
+For example, users can search for:
+
+```text
+crime movies with psychological twists
+```
+
+or:
+
+```text
+dark mystery movies
+```
+
+The system compares the query against the movie metadata and ranks the most relevant results.
+
 ---
 
-# 🧠 Search & Recommendation
+## 🎯 Content Similarity & Recommendations
 
-VibeStream is designed to move beyond a basic movie-list application by incorporating search and recommendation-oriented functionality.
+VibeStream also uses the TF-IDF representation to identify movies with similar metadata.
 
-Users can explore content through:
+```text
+Selected Movie
+      ↓
+Movie TF-IDF Vector
+      ↓
+Cosine Similarity
+      ↓
+Compare with Catalog
+      ↓
+Remove Selected Movie
+      ↓
+Similar Content
+```
 
-* Movie titles
-* Genres
-* Ratings
-* Release years
-* Languages
-* Popularity
-* Categories
-* Natural-language search where supported
-
-The recommendation functionality uses available movie metadata and machine-learning techniques to identify content with similar characteristics.
-
-The goal is to make content discovery more relevant than simply displaying a static catalog.
+This provides a lightweight **content-based recommendation approach** without requiring a large user-interaction dataset.
 
 ---
 
-# 🎞️ TMDb Integration
+## 🎞️ TMDb Integration
 
-VibeStream uses **The Movie Database (TMDb) API** as the primary external source for movie and TV metadata.
+VibeStream uses **The Movie Database (TMDb) API** as its external content source.
 
-The application works with information including:
+The application imports and stores information such as:
 
 * Movie and TV titles
-* Posters
-* Backdrops
+* TMDb IDs
+* Overview
 * Genres
-* Ratings
-* Popularity
-* Vote counts
-* Release information
+* Release year
+* Language
 * Runtime
+* Director
 * Cast
-* Directors
-* Overviews
-* Trailer information
+* Rating
+* Popularity
+* Vote count
+* Poster URLs
+* Backdrop URLs
+* Trailer keys
+* Content categories
 
-The imported data is stored in the application's database, allowing Django ORM queries to efficiently retrieve and organize the content.
-
-The catalog can also be expanded through the TMDb import management command.
+The imported information is stored in the application's database, allowing Django ORM queries to efficiently serve the application's discovery pages.
 
 ---
 
-# 🔐 Authentication
+## 🔐 Authentication
 
-VibeStream includes a user authentication system built using Django authentication and Django Allauth.
+Authentication is implemented using Django's authentication system and **Django Allauth**.
 
-### Authentication Features
+### Supported authentication
 
 * User registration
 * Username/email login
@@ -222,177 +214,196 @@ VibeStream includes a user authentication system built using Django authenticati
 * Google OAuth
 * Profile management
 * Account deletion
-* Personalized watchlist
+* User-specific watchlists
 * User-specific viewing progress
 
-Authentication allows VibeStream to provide personalized features instead of treating every visitor as the same user.
+A custom authentication backend allows users to log in using either their username or email address.
 
 ---
 
-# ❤️ Personal Watchlist
+## ❤️ Watchlist & Continue Watching
 
-Authenticated users can save movies and TV shows to their personal watchlist.
+### Watchlist
 
-Each watchlist is associated with the corresponding Django user.
+Authenticated users can save movies and TV content to their personal watchlist.
 
 ```text
 User
- │
- ├── Movie A
- ├── Movie B
- ├── TV Show A
- └── TV Show B
+  │
+  └── WatchList
+          │
+          └── Movie
 ```
 
-This provides a persistent **My List** experience across sessions.
+Each user's saved content is stored independently.
+
+### Continue Watching
+
+VibeStream stores viewing progress for authenticated users.
+
+```text
+User
+  │
+  └── ContinueWatching
+          │
+          ├── Movie
+          ├── Progress
+          └── Updated Time
+```
+
+This allows users to continue content from their previous viewing position.
 
 ---
 
-# ▶️ Continue Watching
+## ▶️ Trailer Playback
 
-VibeStream includes viewing-progress tracking so users can continue content from where they previously stopped.
+VibeStream does **not** host a catalog of copyrighted movies.
 
-The system stores progress against the authenticated user and content item, allowing the application to retrieve the user's previously watched content.
+Instead, available trailers are represented using trailer keys obtained through TMDb and displayed using YouTube-based playback.
 
-This creates the foundation for a more complete streaming-style experience.
+```text
+TMDb
+ │
+ └── Trailer Key
+        ↓
+   VibeStream
+        ↓
+   YouTube Trailer
+```
 
----
-
-# 📊 Content Discovery
-
-The home page organizes the catalog into multiple discovery sections.
-
-### Movies
-
-* 🔥 Trending Movies
-* 🏆 Top Movies
-* 🎭 Now Playing
-* 📅 Upcoming Movies
-
-### TV
-
-* 📺 Trending TV Shows
-* ⭐ Top Series
-
-### Additional Discovery
-
-* 🎭 Genre-based sections
-* 🔎 Search results
-* 🎬 Featured hero content
-* ❤️ Personal watchlist
-* ▶️ Continue Watching
-
-The interface uses horizontal content rows and interactive navigation to create a streaming-platform-style browsing experience.
+The application therefore focuses on **content discovery and personalization** rather than building a full video-hosting platform.
 
 ---
 
-# 🛠️ Tech Stack
+## 🛠️ Technology Stack
 
-## 💻 Backend
+### 💻 Backend
 
-| Technology         | Purpose                         |
-| ------------------ | ------------------------------- |
-| **Python 3.11**    | Core programming language       |
-| **Django 5.2**     | Web framework                   |
-| **Django ORM**     | Database interaction            |
-| **Django Allauth** | Authentication and Google OAuth |
-| **Gunicorn**       | Production WSGI server          |
-| **WhiteNoise**     | Static file serving             |
+| Technology              | Purpose                         |
+| ----------------------- | ------------------------------- |
+| **Python 3.11**         | Core programming language       |
+| **Django 5.2.16**       | Web framework                   |
+| **Django ORM**          | Database operations             |
+| **Django Allauth**      | Authentication and Google OAuth |
+| **Custom Auth Backend** | Username/email authentication   |
+| **Gunicorn**            | Production WSGI server          |
 
----
+### 🤖 Data & Machine Learning
 
-## 🗄️ Database
+| Technology        | Purpose                           |
+| ----------------- | --------------------------------- |
+| **TMDb API**      | Movie and TV metadata             |
+| **Requests**      | API communication                 |
+| **Pandas**        | Data processing                   |
+| **Scikit-learn**  | TF-IDF and cosine similarity      |
+| **NumPy / SciPy** | Supporting numerical dependencies |
 
-| Technology          | Purpose                                |
-| ------------------- | -------------------------------------- |
-| **PostgreSQL**      | Production database                    |
-| **SQLite**          | Local development database             |
-| **dj-database-url** | Database URL configuration             |
-| **Django ORM**      | Database querying and model management |
+### 🗄️ Database
 
----
+| Technology          | Purpose                    |
+| ------------------- | -------------------------- |
+| **SQLite**          | Local development database |
+| **PostgreSQL**      | Production database        |
+| **psycopg2**        | PostgreSQL database driver |
+| **dj-database-url** | Database URL configuration |
 
-## 🤖 Data & Machine Learning
+### 🎨 Frontend
 
-| Technology                   | Purpose                                           |
-| ---------------------------- | ------------------------------------------------- |
-| **TMDb API**                 | Movie and TV metadata                             |
-| **Python Requests**          | API communication                                 |
-| **Pandas**                   | Data processing                                   |
-| **Scikit-learn**             | Machine learning and recommendation functionality |
-| **Content-based techniques** | Finding relevant content based on metadata        |
+| Technology           | Purpose                       |
+| -------------------- | ----------------------------- |
+| **Django Templates** | Server-rendered UI            |
+| **HTML5**            | Page structure                |
+| **CSS3**             | Styling and responsive design |
+| **JavaScript**       | Interactive functionality     |
+| **YouTube Embeds**   | Trailer playback              |
 
----
+### ☁️ Deployment
 
-## 🎨 Frontend
-
-| Technology               | Purpose                             |
-| ------------------------ | ----------------------------------- |
-| **Django Templates**     | Server-rendered frontend            |
-| **HTML5**                | Page structure                      |
-| **CSS3**                 | Styling and responsive interface    |
-| **JavaScript**           | Interactive functionality           |
-| **Video.js**             | Video player functionality          |
-| **HLS.js / HLS support** | Streaming-oriented playback support |
-
----
-
-## ☁️ Deployment
-
-| Service        | Purpose                                |
-| -------------- | -------------------------------------- |
-| **Render**     | Production web hosting                 |
-| **PostgreSQL** | Production database                    |
-| **Gunicorn**   | Application server                     |
-| **WhiteNoise** | Static asset delivery                  |
-| **GitHub**     | Source control and deployment workflow |
+| Technology       | Purpose                            |
+| ---------------- | ---------------------------------- |
+| **Render**       | Production hosting                 |
+| **Gunicorn**     | Application server                 |
+| **WhiteNoise**   | Static file serving                |
+| **Git / GitHub** | Version control and source hosting |
 
 ---
 
-# 📁 Project Structure
+## 🏗️ Application Architecture
+
+```text
+                         VibeStream
+                             │
+             ┌───────────────┴───────────────┐
+             │                               │
+        Django Templates                  TMDb API
+        HTML / CSS / JS                      │
+             │                               │
+             └───────────────┬───────────────┘
+                             │
+                      Django Backend
+                             │
+          ┌──────────────────┼──────────────────┐
+          │                  │                  │
+        Views              Models          Search Engine
+          │                  │                  │
+          │                  │            Scikit-learn
+          │                  │                  │
+          └──────────────────┼──────────────────┘
+                             │
+                         Database
+                      SQLite / PostgreSQL
+                             │
+                             ▼
+                  User & Content Features
+```
+
+---
+
+## 📁 Project Structure
 
 ```text
 VibeStream/
 │
 ├── accounts/
-│   ├── views.py
-│   ├── models.py
+│   ├── migrations/
 │   ├── backends.py
-│   └── ...
+│   ├── forms.py
+│   ├── models.py
+│   ├── urls.py
+│   └── views.py
 │
 ├── movies/
-│   │
 │   ├── management/
 │   │   └── commands/
 │   │       └── import_tmdb.py
 │   │
-│   ├── templates/
-│   │   └── movies/
-│   │       ├── home.html
-│   │       ├── tv.html
-│   │       ├── favorites.html
-│   │       ├── profile.html
-│   │       └── ...
-│   │
+│   ├── migrations/
 │   ├── static/
 │   │   ├── css/
 │   │   └── js/
 │   │
+│   ├── templates/
+│   │   └── movies/
+│   │
+│   ├── ai_search.py
 │   ├── models.py
-│   ├── views.py
 │   ├── urls.py
-│   └── ...
+│   ├── views.py
+│   └── tests.py
 │
 ├── config/
 │   ├── settings.py
 │   ├── urls.py
-│   ├── wsgi.py
-│   └── ...
+│   └── wsgi.py
+│
+├── screenshots/
+│   ├── home.png
+│   ├── search.png
+│   ├── movie-details.png
+│   └── tv-shows.png
 │
 ├── templates/
-│
 ├── static/
-│
 ├── manage.py
 ├── requirements.txt
 ├── .gitignore
@@ -401,43 +412,9 @@ VibeStream/
 
 ---
 
-# 📦 Key Modules
+## 🗄️ Core Data Model
 
-```text
-⭐ TMDb Data Importer
-   Imports movie and TV metadata from the TMDb API.
-
-⭐ Content Catalog
-   Stores movie and TV information using Django models.
-
-⭐ Search & Filtering
-   Allows users to find content using different search parameters.
-
-⭐ Recommendation System
-   Uses content metadata and machine-learning techniques to identify
-   relevant content.
-
-⭐ Authentication System
-   Handles registration, login, logout, Google OAuth and account management.
-
-⭐ Watchlist System
-   Stores user-specific movies and TV shows for later viewing.
-
-⭐ Continue Watching
-   Tracks viewing progress for authenticated users.
-
-⭐ Content Discovery
-   Organizes content into trending, top-rated, upcoming and category sections.
-
-⭐ Deployment Configuration
-   Supports production deployment with PostgreSQL, Gunicorn and WhiteNoise.
-```
-
----
-
-# 🗄️ Core Data Model
-
-The main `Movie` model is designed to represent both movies and TV shows.
+The main `Movie` model supports both movies and TV shows.
 
 ```text
 Movie
@@ -463,57 +440,65 @@ Movie
 └── category
 ```
 
-The `media_type` field distinguishes between:
+User-related functionality includes:
+
+```text
+WatchList
+│
+├── user
+├── movie
+└── added_at
+
+
+ContinueWatching
+│
+├── user
+├── movie
+├── progress
+└── updated_at
+```
+
+The `media_type` field allows the content model to represent:
 
 ```text
 movie
 tv
 ```
 
-This allows a common content model to support both movies and television content while keeping the application architecture relatively simple.
-
 ---
 
-# ⚙️ Local Development
+## ⚙️ Local Development
 
-## 1. Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/prachi912/VibeStream.git
 cd VibeStream
 ```
 
----
-
-## 2. Create a virtual environment
+### 2. Create a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
----
+### 3. Activate the environment
 
-## 3. Activate the virtual environment
-
-### Windows PowerShell
+**Windows PowerShell:**
 
 ```powershell
 venv\Scripts\Activate.ps1
 ```
 
----
-
-## 4. Install dependencies
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
+### 5. Configure environment variables
 
-## 5. Configure environment variables
-
-Create a `.env` file in the project root.
+Create a `.env` file:
 
 ```env
 SECRET_KEY=your_secret_key
@@ -529,27 +514,21 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 DATABASE_URL=your_database_url
 ```
 
-> ⚠️ Never commit `.env` files, API keys, OAuth secrets, or database credentials to GitHub.
+Never commit `.env` or secret credentials to GitHub.
 
----
-
-## 6. Run migrations
+### 6. Apply migrations
 
 ```bash
 python manage.py migrate
 ```
 
----
-
-## 7. Import content
+### 7. Import content
 
 ```bash
 python manage.py import_tmdb
 ```
 
----
-
-## 8. Start the development server
+### 8. Start the development server
 
 ```bash
 python manage.py runserver
@@ -563,153 +542,120 @@ http://127.0.0.1:8000/
 
 ---
 
-# ☁️ Deployment
+## ☁️ Deployment
 
 VibeStream is deployed using **Render**.
 
-The deployment workflow is:
-
 ```text
-GitHub Repository
-        │
-        ▼
-     Render
-        │
-        ├── Gunicorn
-        │
-        ├── Django
-        │
-        ├── WhiteNoise
-        │
-        └── PostgreSQL
+GitHub
+   │
+   ▼
+Render
+   │
+   ├── Django
+   ├── Gunicorn
+   ├── WhiteNoise
+   └── PostgreSQL
 ```
 
-### Production Build Command
+### Build Command
 
 ```bash
 pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
 ```
 
-### Production Start Command
+### Start Command
 
 ```bash
 gunicorn config.wsgi:application
 ```
 
-Production secrets and environment variables are configured through the Render dashboard instead of being committed to the repository.
+The production database is configured through `DATABASE_URL`.
 
 ---
 
-# 🔑 Environment Variables
+## 🔑 Environment Variables
 
-| Variable               | Purpose                      |
-| ---------------------- | ---------------------------- |
-| `SECRET_KEY`           | Django security key          |
-| `DEBUG`                | Development/production mode  |
-| `TMDB_API_KEY`         | TMDb API authentication      |
-| `YOUTUBE_API_KEY`      | YouTube API access           |
-| `GOOGLE_CLIENT_ID`     | Google OAuth client ID       |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth secret          |
-| `DATABASE_URL`         | PostgreSQL connection string |
-| `ALLOWED_HOSTS`        | Allowed application hosts    |
+| Variable               | Purpose                        |
+| ---------------------- | ------------------------------ |
+| `SECRET_KEY`           | Django security key            |
+| `DEBUG`                | Application debug mode         |
+| `TMDB_API_KEY`         | TMDb API access                |
+| `YOUTUBE_API_KEY`      | YouTube API access             |
+| `GOOGLE_CLIENT_ID`     | Google OAuth client            |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth secret            |
+| `DATABASE_URL`         | Production database connection |
+| `ALLOWED_HOSTS`        | Allowed application domains    |
 
-> 🔒 **Security:** Never commit environment variables containing secrets to GitHub.
-
----
-
-# 🧪 Current Production Data
-
-The production database contains a mixed movie and TV catalog populated through the TMDb import process.
-
-```text
-Movies: 428+
-TV Shows: 339+
-
-Total Content: 767+
-```
-
-The catalog can be expanded further by importing additional TMDb content.
-
-> Counts may change as the production catalog is updated.
+> ⚠️ Never commit API keys, OAuth secrets, database credentials or `.env` files to a public repository.
 
 ---
 
-# 🧩 Engineering Challenges & Decisions
+## 🚧 Engineering Challenges
 
-## SQLite → PostgreSQL
+### API Data Integration
 
-SQLite was used during local development because it is lightweight and requires no separate database server.
+Working with TMDb required handling external API responses, importing metadata and designing a database model capable of representing both movies and TV shows.
 
-For production, VibeStream uses PostgreSQL through `DATABASE_URL`.
+### Search & Ranking
 
-This provides a more appropriate database setup for a deployed application.
+A major challenge was moving beyond simple title matching.
 
----
+The search implementation required:
 
-## Local Database ≠ Production Database
+1. Preparing searchable movie metadata.
+2. Building a TF-IDF matrix.
+3. Converting user queries into vectors.
+4. Calculating cosine similarity.
+5. Combining similarity with keyword matching.
+6. Ranking the final results.
 
-The local SQLite database and Render PostgreSQL database are separate environments.
+### Authentication
 
-Therefore:
+Supporting username/email login together with Google authentication required working with Django's authentication system, a custom authentication backend and Django Allauth.
 
-```text
-Local SQLite
-     ≠
-Render PostgreSQL
-```
+### Local vs Production Database
 
-Data imported into the local database does not automatically appear in production.
+The application uses SQLite during local development and PostgreSQL in production.
 
-The TMDb import process can be executed against the appropriate environment to populate the production catalog.
+The database configuration is controlled through environment variables so the same Django application can work in both environments.
 
----
+### Deployment
 
-## Django Templates Instead of React
+Deploying the project introduced practical challenges involving:
 
-VibeStream uses Django's server-rendered templates rather than introducing a separate React frontend.
-
-This decision keeps the architecture relatively simple while still allowing:
-
-* JavaScript interactions
-* Dynamic carousels
-* Interactive UI components
-* Responsive CSS
-* Video playback functionality
-
-For this project's scope, Django provides both backend and frontend rendering without requiring a separate frontend deployment.
+* Environment variables
+* PostgreSQL configuration
+* Static files
+* URL routing
+* Authentication configuration
+* Production server configuration
+* Debugging deployment issues
 
 ---
 
-## External API Data Management
+## 📚 What I Learned
 
-Instead of hardcoding movie information into templates, VibeStream retrieves content from TMDb and stores relevant metadata in the application's database.
+Building VibeStream gave me practical experience with:
 
-This creates a workflow closer to a real data-driven application:
-
-```text
-TMDb API
-   │
-   ▼
-Data Ingestion
-   │
-   ▼
-Django Models
-   │
-   ▼
-PostgreSQL
-   │
-   ▼
-Django ORM
-   │
-   ▼
-Web Application
-```
+* Python and Django development
+* Django ORM and relational databases
+* Third-party REST API integration
+* Data ingestion and processing
+* Search and ranking techniques
+* TF-IDF and cosine similarity
+* Authentication and OAuth
+* User-specific application features
+* SQLite and PostgreSQL
+* Environment configuration
+* Static file handling
+* Git and GitHub
+* Production deployment
+* Debugging development and deployment issues
 
 ---
 
-# 🗺️ Roadmap
-
-## ✅ Completed
+## 🗺️ Roadmap
 
 * [x] Movie discovery
 * [x] TV show discovery
@@ -717,145 +663,75 @@ Web Application
 * [x] Database-backed content catalog
 * [x] User authentication
 * [x] Google OAuth
-* [x] Watchlist / My List
+* [x] Watchlist
 * [x] Continue Watching
 * [x] Search and filtering
-* [x] Trending hero carousel
-* [x] Category-based content discovery
+* [x] Content similarity
+* [x] Trending content
+* [x] Category-based discovery
 * [x] PostgreSQL production database
-* [x] Responsive streaming-style interface
 * [x] Render deployment
-
-## 🚀 Planned Improvements
-
 * [ ] Improved personalized recommendations
 * [ ] More advanced recommendation models
-* [ ] Expanded semantic search capabilities
-* [ ] Improved video streaming pipeline
-* [ ] More detailed viewing analytics
+* [ ] Improved search ranking
 * [ ] Larger content catalog
-* [ ] Performance optimization for large datasets
-* [ ] Advanced content filtering
-* [ ] Improved recommendation accuracy
-* [ ] Better TV show and episode-level support
+* [ ] More detailed viewing analytics
+* [ ] Performance optimization for larger datasets
 
 ---
 
-# 📈 What I Learned
+## 🔮 Future Improvements
 
-Building VibeStream gave me hands-on experience with several practical software and data engineering concepts:
-
-* Building a full-stack Django application
-* Designing database models for movie and TV data
-* Integrating a third-party REST API
-* Building a data ingestion workflow
-* Working with Django ORM and database queries
-* Processing and organizing external API data
-* Implementing authentication and OAuth
-* Building user-specific features
-* Working with machine-learning concepts for recommendations
-* Managing environment variables and application secrets
-* Working with SQLite during development
-* Migrating to PostgreSQL for production
-* Configuring Gunicorn for deployment
-* Serving static files with WhiteNoise
-* Debugging deployment and production issues
-* Deploying a Django application on Render
-* Using Git and GitHub for source control
-
----
-
-# 🔮 Future Improvements
-
-The long-term goal is to evolve VibeStream from a content discovery application into a more personalized data-driven platform.
-
-A future recommendation pipeline could look like:
+The next stage of VibeStream would focus on making recommendations more personalized.
 
 ```text
-                 User Activity
-                      │
-          ┌───────────┼───────────┐
-          │           │           │
-          ▼           ▼           ▼
-     Watchlist    Watch History   Search
-          │           │           │
-          └───────────┼───────────┘
-                      ▼
-              Feature Extraction
-                      │
-                      ▼
-            Recommendation Engine
-                      │
-                      ▼
-             Personalized Content
+User Activity
+      │
+      ├── Viewing History
+      │
+      ├── Watchlist
+      │
+      └── Search History
+              │
+              ▼
+      Recommendation Engine
+              │
+              ▼
+     Personalized Content
 ```
 
-This could eventually combine content similarity with user behavior to produce more personalized recommendations.
+Future versions could incorporate user behavior alongside content similarity to produce more personalized recommendations.
 
 ---
 
-# 🚀 Project Goals
-
-VibeStream was built as a practical project to explore how a real-world content platform can combine:
-
-```text
-External Data
-      +
-Database
-      +
-Backend
-      +
-Search
-      +
-Machine Learning
-      +
-Authentication
-      +
-Cloud Deployment
-```
-
-The project also provided hands-on experience in taking an application from local development through production deployment.
-
----
-
-# 👩‍💻 Author
-
-<div align="center">
+## 👩‍💻 About Me
 
 ### Prachi Chauhan
 
-**Computer Science Postgraduate | Aspiring Data Engineer**
+**MCA Graduate | Fresher | Aspiring Data Engineer**
 
-Building with:
+Interested in building practical software and data-driven systems using:
 
-**Python • SQL • Data Engineering • ETL • Cloud • AI/ML**
+**Python • SQL • Data Engineering • Cloud • AI/ML**
+
+VibeStream was built as a hands-on project to strengthen my understanding of backend development, APIs, databases, machine learning techniques, authentication and production deployment.
 
 <br>
 
 <a href="https://github.com/prachi912">
-  <img src="https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github" alt="GitHub Profile">
+  <img src="https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github" alt="GitHub">
 </a>
 
 <a href="https://www.linkedin.com/in/prachi-chauhan-79a446226">
-  <img src="https://img.shields.io/badge/LinkedIn-Profile-0A66C2?style=for-the-badge&logo=linkedin" alt="LinkedIn Profile">
+  <img src="https://img.shields.io/badge/LinkedIn-Profile-0A66C2?style=for-the-badge&logo=linkedin" alt="LinkedIn">
 </a>
-
-</div>
 
 ---
 
 <div align="center">
 
-### ⭐ If you find VibeStream interesting, consider giving the repository a star.
-
-**Live Demo:**
-https://vibestream-0k2c.onrender.com
-
-**GitHub:**
-https://github.com/prachi912/VibeStream
-
-<br>
-
-*Built with Python, Django, SQL, APIs, and a lot of debugging.*
+**VibeStream — built as a practical full-stack and data-focused learning project.**
 
 </div>
+
+
