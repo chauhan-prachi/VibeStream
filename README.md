@@ -2,10 +2,10 @@
 
 # 🎬 VibeStream
 
-### Movie & TV Discovery Platform with Semantic Search and Personalization
+### Movie & TV Discovery Platform with Semantic Search & Personalization
 
 <p>
-  <strong>A Django-based streaming-style platform for discovering movies and TV shows, searching content, exploring recommendations, and managing a personal watchlist.</strong>
+  <strong>Discover movies and TV shows, search naturally, explore similar content, and manage your personal watchlist in a modern streaming-style platform.</strong>
 </p>
 
 <br>
@@ -22,10 +22,14 @@
 
 <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
 <img src="https://img.shields.io/badge/Django-5.2-092E20?style=flat-square&logo=django&logoColor=white" alt="Django">
-<img src="https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
-<img src="https://img.shields.io/badge/SQLite-Local%20DB-003B57?style=flat-square&logo=sqlite&logoColor=white" alt="SQLite">
-<img src="https://img.shields.io/badge/TMDb-API-01B4E4?style=flat-square" alt="TMDb">
-<img src="https://img.shields.io/badge/Render-Deployed-46E3B7?style=flat-square&logo=render&logoColor=black" alt="Render">
+<img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
+<img src="https://img.shields.io/badge/Scikit--learn-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" alt="Scikit-learn">
+<img src="https://img.shields.io/badge/TMDb-01B4E4?style=flat-square&logo=themoviedatabase&logoColor=white" alt="TMDb">
+<img src="https://img.shields.io/badge/Render-46E3B7?style=flat-square&logo=render&logoColor=black" alt="Render">
+
+<br><br>
+
+> **VibeStream** is a full-stack Django application for movie and TV discovery. It combines TMDb data ingestion, database-backed content discovery, semantic-style search using TF-IDF and cosine similarity, authentication, watchlists, viewing progress and production deployment.
 
 </div>
 
@@ -33,13 +37,13 @@
 
 ## 🌐 Live Demo
 
-🚀 **VibeStream:**
+🚀 **Try VibeStream:**
 https://vibestream-0k2c.onrender.com
 
-💻 **Source Code:**
+📂 **Source Code:**
 https://github.com/prachi912/VibeStream
 
-VibeStream is deployed on **Render** with **PostgreSQL** used for the production database.
+> The application is deployed on Render with PostgreSQL used as the production database.
 
 ---
 
@@ -57,7 +61,7 @@ The home page provides a streaming-style interface for discovering trending, pop
 
 ![VibeStream Search](screenshots/search.png)
 
-The search system supports natural-language queries along with filters such as genre, year, language and rating.
+The search system supports natural-language queries together with filters such as genre, year, language and rating.
 
 ---
 
@@ -101,9 +105,9 @@ A dedicated section allows users to explore TV content separately from movies.
 
 ## 🧠 Semantic Search
 
-One of the main technical components of VibeStream is its semantic-style search system.
+A major technical component of VibeStream is its semantic-style search system.
 
-Instead of relying only on exact movie titles, the application creates searchable text from movie metadata such as:
+Instead of relying only on exact title matching, the application represents movie information using fields such as:
 
 ```text
 Title
@@ -114,7 +118,7 @@ Director
 Cast
 ```
 
-The search process works approximately as follows:
+The search pipeline works approximately as follows:
 
 ```text
 Movie Metadata
@@ -123,7 +127,7 @@ Text Representation
       ↓
 TF-IDF Vectorization
       ↓
-User Query Vector
+User Query → TF-IDF Vector
       ↓
 Cosine Similarity
       ↓
@@ -134,7 +138,7 @@ Combined Relevance Score
 Ranked Results
 ```
 
-The implementation uses **TfidfVectorizer** and **cosine_similarity** from Scikit-learn.
+The implementation uses `TfidfVectorizer` and `cosine_similarity` from Scikit-learn.
 
 For example, users can search for:
 
@@ -148,18 +152,22 @@ or:
 dark mystery movies
 ```
 
-The system compares the query against the movie metadata and ranks the most relevant results.
+The system uses the relationship between the query and stored movie metadata to rank relevant results.
+
+> This is a lightweight content-search approach rather than a large-scale neural embedding system.
 
 ---
 
 ## 🎯 Content Similarity & Recommendations
 
-VibeStream also uses the TF-IDF representation to identify movies with similar metadata.
+VibeStream also uses TF-IDF and cosine similarity to identify content similar to the movie currently being viewed.
 
 ```text
 Selected Movie
       ↓
-Movie TF-IDF Vector
+Movie Metadata
+      ↓
+TF-IDF Vector
       ↓
 Cosine Similarity
       ↓
@@ -170,7 +178,7 @@ Remove Selected Movie
 Similar Content
 ```
 
-This provides a lightweight **content-based recommendation approach** without requiring a large user-interaction dataset.
+This provides a practical content-based recommendation approach without requiring a large user-interaction dataset.
 
 ---
 
@@ -178,7 +186,7 @@ This provides a lightweight **content-based recommendation approach** without re
 
 VibeStream uses **The Movie Database (TMDb) API** as its external content source.
 
-The application imports and stores information such as:
+The application imports and stores metadata including:
 
 * Movie and TV titles
 * TMDb IDs
@@ -197,13 +205,15 @@ The application imports and stores information such as:
 * Trailer keys
 * Content categories
 
-The imported information is stored in the application's database, allowing Django ORM queries to efficiently serve the application's discovery pages.
+The data is stored in the application's database so Django ORM queries can efficiently retrieve content for the different discovery pages.
+
+The project includes a Django management command for importing TMDb content.
 
 ---
 
 ## 🔐 Authentication
 
-Authentication is implemented using Django's authentication system and **Django Allauth**.
+Authentication is built around Django's authentication system and Django Allauth.
 
 ### Supported authentication
 
@@ -219,25 +229,27 @@ Authentication is implemented using Django's authentication system and **Django 
 
 A custom authentication backend allows users to log in using either their username or email address.
 
+Google authentication is handled through Django Allauth.
+
 ---
 
-## ❤️ Watchlist & Continue Watching
+## ❤️ Watchlist
 
-### Watchlist
+Authenticated users can save movies and TV shows to their personal watchlist.
 
-Authenticated users can save movies and TV content to their personal watchlist.
+The watchlist is associated with the logged-in Django user, meaning each account maintains its own saved content.
 
 ```text
 User
   │
   └── WatchList
           │
-          └── Movie
+          └── Movie / TV Content
 ```
 
-Each user's saved content is stored independently.
+---
 
-### Continue Watching
+## ▶️ Continue Watching
 
 VibeStream stores viewing progress for authenticated users.
 
@@ -245,33 +257,32 @@ VibeStream stores viewing progress for authenticated users.
 User
   │
   └── ContinueWatching
-          │
           ├── Movie
           ├── Progress
           └── Updated Time
 ```
 
-This allows users to continue content from their previous viewing position.
+This allows the application to remember where a user stopped watching and provide a continue-watching experience.
 
 ---
 
-## ▶️ Trailer Playback
+## 🎥 Trailer Playback
 
 VibeStream does **not** host a catalog of copyrighted movies.
 
-Instead, available trailers are represented using trailer keys obtained through TMDb and displayed using YouTube-based playback.
+Available trailers are displayed using YouTube-based playback with trailer information obtained through TMDb.
 
 ```text
 TMDb
- │
- └── Trailer Key
+  │
+  └── Trailer Key
         ↓
-   VibeStream
+    VibeStream
         ↓
    YouTube Trailer
 ```
 
-The application therefore focuses on **content discovery and personalization** rather than building a full video-hosting platform.
+This keeps the project focused on **content discovery, search and personalization** rather than building a full video-hosting platform.
 
 ---
 
@@ -294,7 +305,6 @@ The application therefore focuses on **content discovery and personalization** r
 | ----------------- | --------------------------------- |
 | **TMDb API**      | Movie and TV metadata             |
 | **Requests**      | API communication                 |
-| **Pandas**        | Data processing                   |
 | **Scikit-learn**  | TF-IDF and cosine similarity      |
 | **NumPy / SciPy** | Supporting numerical dependencies |
 
@@ -302,20 +312,20 @@ The application therefore focuses on **content discovery and personalization** r
 
 | Technology          | Purpose                    |
 | ------------------- | -------------------------- |
-| **SQLite**          | Local development database |
+| **SQLite**          | Local development          |
 | **PostgreSQL**      | Production database        |
 | **psycopg2**        | PostgreSQL database driver |
 | **dj-database-url** | Database URL configuration |
 
 ### 🎨 Frontend
 
-| Technology           | Purpose                       |
-| -------------------- | ----------------------------- |
-| **Django Templates** | Server-rendered UI            |
-| **HTML5**            | Page structure                |
-| **CSS3**             | Styling and responsive design |
-| **JavaScript**       | Interactive functionality     |
-| **YouTube Embeds**   | Trailer playback              |
+| Technology           | Purpose                         |
+| -------------------- | ------------------------------- |
+| **Django Templates** | Server-rendered pages           |
+| **HTML5**            | Page structure                  |
+| **CSS3**             | UI design and responsive layout |
+| **JavaScript**       | Interactive functionality       |
+| **YouTube Embeds**   | Trailer playback                |
 
 ### ☁️ Deployment
 
@@ -332,29 +342,31 @@ The application therefore focuses on **content discovery and personalization** r
 
 ```text
                          VibeStream
-                             │
-             ┌───────────────┴───────────────┐
-             │                               │
-        Django Templates                  TMDb API
-        HTML / CSS / JS                      │
-             │                               │
-             └───────────────┬───────────────┘
-                             │
-                      Django Backend
-                             │
-          ┌──────────────────┼──────────────────┐
-          │                  │                  │
-        Views              Models          Search Engine
-          │                  │                  │
-          │                  │            Scikit-learn
-          │                  │                  │
-          └──────────────────┼──────────────────┘
-                             │
-                         Database
-                      SQLite / PostgreSQL
-                             │
-                             ▼
-                  User & Content Features
+                              │
+              ┌───────────────┴───────────────┐
+              │                               │
+         Django Templates                 TMDb API
+              │                               │
+          HTML/CSS/JS                        │
+              │                               │
+              └───────────────┬───────────────┘
+                              │
+                       Django Backend
+                              │
+             ┌────────────────┼────────────────┐
+             │                │                │
+           Views            Models        Search Engine
+             │                │                │
+             │                │          Scikit-learn
+             │                │                │
+             └────────────────┼────────────────┘
+                              │
+                           Database
+                       SQLite / PostgreSQL
+                              │
+                              ▼
+                    User-Specific Features
+                 Watchlist / Viewing Progress
 ```
 
 ---
@@ -440,7 +452,7 @@ Movie
 └── category
 ```
 
-User-related functionality includes:
+User-specific models include:
 
 ```text
 WatchList
@@ -448,8 +460,9 @@ WatchList
 ├── user
 ├── movie
 └── added_at
+```
 
-
+```text
 ContinueWatching
 │
 ├── user
@@ -498,7 +511,7 @@ pip install -r requirements.txt
 
 ### 5. Configure environment variables
 
-Create a `.env` file:
+Create a `.env` file in the project root:
 
 ```env
 SECRET_KEY=your_secret_key
@@ -514,7 +527,7 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 DATABASE_URL=your_database_url
 ```
 
-Never commit `.env` or secret credentials to GitHub.
+> Never commit `.env`, API keys, OAuth secrets or database credentials to GitHub.
 
 ### 6. Apply migrations
 
@@ -522,7 +535,7 @@ Never commit `.env` or secret credentials to GitHub.
 python manage.py migrate
 ```
 
-### 7. Import content
+### 7. Import TMDb content
 
 ```bash
 python manage.py import_tmdb
@@ -544,7 +557,7 @@ http://127.0.0.1:8000/
 
 ## ☁️ Deployment
 
-VibeStream is deployed using **Render**.
+VibeStream is deployed on **Render**.
 
 ```text
 GitHub
@@ -572,6 +585,8 @@ gunicorn config.wsgi:application
 
 The production database is configured through `DATABASE_URL`.
 
+Environment variables and secrets are configured through the Render dashboard rather than committed to the repository.
+
 ---
 
 ## 🔑 Environment Variables
@@ -591,58 +606,81 @@ The production database is configured through `DATABASE_URL`.
 
 ---
 
-## 🚧 Engineering Challenges
+## 🧪 Production Data
+
+The application uses a database-backed catalog containing both movies and TV shows.
+
+The catalog can be expanded through the TMDb import management command.
+
+```text
+TMDb API
+   ↓
+Import Command
+   ↓
+Django ORM
+   ↓
+PostgreSQL
+   ↓
+VibeStream Catalog
+```
+
+---
+
+## 🧩 Engineering Challenges
 
 ### API Data Integration
 
-Working with TMDb required handling external API responses, importing metadata and designing a database model capable of representing both movies and TV shows.
+Integrating TMDb required handling external API responses, transforming the returned data and storing the relevant fields in the application's database.
 
-### Search & Ranking
+### Semantic Search
 
-A major challenge was moving beyond simple title matching.
+The search system required implementing:
 
-The search implementation required:
+1. Metadata text preparation
+2. TF-IDF vectorization
+3. Query vectorization
+4. Cosine similarity
+5. Keyword matching
+6. Result ranking
 
-1. Preparing searchable movie metadata.
-2. Building a TF-IDF matrix.
-3. Converting user queries into vectors.
-4. Calculating cosine similarity.
-5. Combining similarity with keyword matching.
-6. Ranking the final results.
+This provided practical experience with search and information-retrieval concepts.
 
 ### Authentication
 
-Supporting username/email login together with Google authentication required working with Django's authentication system, a custom authentication backend and Django Allauth.
+Supporting username/email authentication alongside Google OAuth required working with Django authentication, custom backend logic and Django Allauth.
 
 ### Local vs Production Database
 
-The application uses SQLite during local development and PostgreSQL in production.
+SQLite is used for local development while PostgreSQL is used in production.
 
-The database configuration is controlled through environment variables so the same Django application can work in both environments.
+The database configuration is selected using environment variables so the same Django application can run in both environments.
 
 ### Deployment
 
-Deploying the project introduced practical challenges involving:
+Deploying the application introduced practical experience with:
 
 * Environment variables
 * PostgreSQL configuration
 * Static files
+* Gunicorn
+* WhiteNoise
+* Production settings
 * URL routing
 * Authentication configuration
-* Production server configuration
 * Debugging deployment issues
 
 ---
 
 ## 📚 What I Learned
 
-Building VibeStream gave me practical experience with:
+Building VibeStream provided hands-on experience with:
 
 * Python and Django development
-* Django ORM and relational databases
-* Third-party REST API integration
-* Data ingestion and processing
-* Search and ranking techniques
+* Django ORM
+* Relational database design
+* REST API integration
+* Data ingestion
+* Search and ranking
 * TF-IDF and cosine similarity
 * Authentication and OAuth
 * User-specific application features
@@ -651,7 +689,7 @@ Building VibeStream gave me practical experience with:
 * Static file handling
 * Git and GitHub
 * Production deployment
-* Debugging development and deployment issues
+* Debugging real-world application issues
 
 ---
 
@@ -667,14 +705,15 @@ Building VibeStream gave me practical experience with:
 * [x] Continue Watching
 * [x] Search and filtering
 * [x] Content similarity
-* [x] Trending content
+* [x] Semantic-style search
+* [x] Trending hero section
 * [x] Category-based discovery
 * [x] PostgreSQL production database
 * [x] Render deployment
 * [ ] Improved personalized recommendations
 * [ ] More advanced recommendation models
-* [ ] Improved search ranking
-* [ ] Larger content catalog
+* [ ] Expanded search capabilities
+* [ ] Improved video delivery
 * [ ] More detailed viewing analytics
 * [ ] Performance optimization for larger datasets
 
@@ -688,23 +727,32 @@ The next stage of VibeStream would focus on making recommendations more personal
 User Activity
       │
       ├── Viewing History
-      │
       ├── Watchlist
-      │
       └── Search History
               │
               ▼
       Recommendation Engine
               │
               ▼
-     Personalized Content
+      Personalized Content
 ```
 
-Future versions could incorporate user behavior alongside content similarity to produce more personalized recommendations.
+Future improvements could include:
+
+* User-behavior-based recommendations
+* Improved ranking models
+* Larger content catalogs
+* Better search relevance
+* More detailed analytics
+* Recommendation evaluation
+* Performance optimization
+* Improved video delivery
 
 ---
 
 ## 👩‍💻 About Me
+
+<div align="center">
 
 ### Prachi Chauhan
 
@@ -713,8 +761,6 @@ Future versions could incorporate user behavior alongside content similarity to 
 Interested in building practical software and data-driven systems using:
 
 **Python • SQL • Data Engineering • Cloud • AI/ML**
-
-VibeStream was built as a hands-on project to strengthen my understanding of backend development, APIs, databases, machine learning techniques, authentication and production deployment.
 
 <br>
 
@@ -726,12 +772,28 @@ VibeStream was built as a hands-on project to strengthen my understanding of bac
   <img src="https://img.shields.io/badge/LinkedIn-Profile-0A66C2?style=for-the-badge&logo=linkedin" alt="LinkedIn">
 </a>
 
+</div>
+
 ---
 
 <div align="center">
 
-**VibeStream — built as a practical full-stack and data-focused learning project.**
+### 🎬 VibeStream
+
+**A hands-on project combining web development, APIs, databases, search and machine learning concepts.**
+
+<br>
+
+<a href="https://vibestream-0k2c.onrender.com">
+  🚀 Live Demo
+</a>
+&nbsp;&nbsp;•&nbsp;&nbsp;
+<a href="https://github.com/prachi912/VibeStream">
+  💻 Source Code
+</a>
+
+<br><br>
+
+*Built with Python, Django, SQL and machine learning techniques.*
 
 </div>
-
-
