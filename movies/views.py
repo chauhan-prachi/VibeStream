@@ -78,10 +78,9 @@ def search(request):
     movies = Movie.objects.all()
 
     # AI semantic search
-    # AI semantic search
     if query:
         from .ai_search import semantic_search
-        ai_results = semantic_search(query, top_n=100)
+        ai_results = semantic_search(query, top_n=50)
         ids = [m.id for m in ai_results]
         movies = Movie.objects.filter(id__in=ids)
 
