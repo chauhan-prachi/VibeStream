@@ -8,69 +8,163 @@ from django.conf import settings
 from .models import Movie, WatchList, ContinueWatching
 from django.db.models import Case, When
 
-
+# =========================
 # Home Page
 # =========================
 def home(request):
-    print("DATABASE ENGINE:", settings.DATABASES["default"]["ENGINE"])
-    print(
-    "MOVIE COUNT:",
-    Movie.objects.filter(media_type="movie").count()
-)
 
     print(
-    "TV COUNT:",
-    Movie.objects.filter(media_type="tv").count()
-)    
+        "DATABASE ENGINE:",
+        settings.DATABASES["default"]["ENGINE"]
+    )
+
+    print(
+        "MOVIE COUNT:",
+        Movie.objects.filter(
+            media_type="movie"
+        ).count()
+    )
+
+    print(
+        "TV COUNT:",
+        Movie.objects.filter(
+            media_type="tv"
+        ).count()
+    )
+
+    # =========================
+    # Popular Movies
+    # =========================
+
     popular_movies = (
         Movie.objects
+        .filter(media_type="movie")
         .order_by("-popularity")[:50]
     )
+
+    # =========================
+    # Top Rated Movies
+    # =========================
 
     top_rated_movies = (
         Movie.objects
-        .filter(category="Top Rated")
+        .filter(
+            media_type="movie",
+            category="Top Rated"
+        )
         .order_by("-rating")[:50]
     )
 
+    # =========================
+    # Now Playing
+    # =========================
+
     now_playing_movies = (
         Movie.objects
-        .filter(category="Now Playing")
+        .filter(
+            media_type="movie",
+            category="Now Playing"
+        )
         .order_by("-popularity")[:50]
     )
 
+    # =========================
+    # Upcoming
+    # =========================
+
     upcoming_movies = (
         Movie.objects
-        .filter(category="Upcoming")
+        .filter(
+            media_type="movie",
+            category="Upcoming"
+        )
         .order_by("-release_year")[:50]
     )
 
+    # =========================
+    # Trending Now / Hero Movies
+    # =========================
+    #
+    # Get the 5 most popular MOVIES
+    # that have both poster and backdrop.
+    #
+    # Do NOT depend only on category="Popular".
+    # This makes the hero section much more reliable
+    # when the database grows.
+    # =========================
+
     featured_movies = list(
         Movie.objects
-        .filter(category="Popular")
-        .order_by("-popularity")[:5]
+        .filter(
+            media_type="movie"
+        )
+        .exclude(
+            poster_url=""
+        )
+        .exclude(
+            poster_url__isnull=True
+        )
+        .exclude(
+            backdrop_url=""
+        )
+        .exclude(
+            backdrop_url__isnull=True
+        )
+        .order_by(
+            "-popularity"
+        )[:5]
     )
 
-    featured_movie = featured_movies[0] if featured_movies else None
+    # =========================
+    # Featured Movie
+    # =========================
+
+    featured_movie = (
+        featured_movies[0]
+        if featured_movies
+        else None
+    )
+
+    # =========================
+    # Watchlist
+    # =========================
+
     watchlist_ids = set()
 
     if request.user.is_authenticated:
-      watchlist_ids = set(
-        WatchList.objects.filter(user=request.user)
-        .values_list("movie_id", flat=True)
-    )
+
+        watchlist_ids = set(
+            WatchList.objects
+            .filter(
+                user=request.user
+            )
+            .values_list(
+                "movie_id",
+                flat=True
+            )
+        )
+
+    # =========================
+    # Context
+    # =========================
 
     context = {
-    "featured_movie": featured_movie,
-    "featured_movies": featured_movies,
-    "popular_movies": popular_movies,
-    "top_rated_movies": top_rated_movies,
-    "now_playing_movies": now_playing_movies,
-    "upcoming_movies": upcoming_movies,
-    "watchlist_ids": watchlist_ids,
-}
+        "featured_movie": featured_movie,
+        "featured_movies": featured_movies,
 
-    return render(request, "movies/home.html", context)
+        "popular_movies": popular_movies,
+        "top_rated_movies": top_rated_movies,
+        "now_playing_movies": now_playing_movies,
+        "upcoming_movies": upcoming_movies,
+
+        "watchlist_ids": watchlist_ids,
+    }
+
+    return render(
+        request,
+        "movies/home.html",
+        context
+    )
 
 # =========================
 # AI Semantic Search + Advanced Filters
