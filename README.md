@@ -602,7 +602,7 @@ Environment variables and secrets are configured through the Render dashboard ra
 | `DATABASE_URL`         | Production database connection |
 | `ALLOWED_HOSTS`        | Allowed application domains    |
 
-> ⚠️ Never commit API keys, OAuth secrets, database credentials or `.env` files to a public repository.
+
 
 ---
 
