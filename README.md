@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/🚀%20Live%20Demo-VibeStream-8B5CF6?style=for-the-badge" alt="Live Demo">
 </a>
 
-<a href="https://github.com/prachi912/VibeStream">
+<a href="github.com/chauhan-prachi/VibeStream">
   <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" alt="GitHub Repository">
 </a>
 
@@ -41,8 +41,7 @@
 https://vibestream-0k2c.onrender.com
 
 📂 **Source Code:**
-https://github.com/prachi912/VibeStream
-
+github.com/chauhan-prachi/VibeStream
 > The application is deployed on Render with PostgreSQL used as the production database.
 
 ---
@@ -788,7 +787,7 @@ Interested in building practical software and data-driven systems using:
   🚀 Live Demo
 </a>
 &nbsp;&nbsp;•&nbsp;&nbsp;
-<a href="https://github.com/prachi912/VibeStream">
+<a href="github.com/chauhan-prachi/VibeStream">
   💻 Source Code
 </a>
 
