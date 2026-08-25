@@ -1,5 +1,4 @@
 <div align="center">
-
 # 🎬 VibeStream
 
 ### Movie & TV Discovery Platform with Semantic Search & Personalization
@@ -14,7 +13,7 @@
   <img src="https://img.shields.io/badge/🚀%20Live%20Demo-VibeStream-8B5CF6?style=for-the-badge" alt="Live Demo">
 </a>
 
-<a href="github.com/chauhan-prachi/VibeStream">
+<a href="https://github.com/chauhan-prachi/VibeStream">
   <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" alt="GitHub Repository">
 </a>
 
@@ -763,7 +762,7 @@ Interested in building practical software and data-driven systems using:
 
 <br>
 
-<a href="https://github.com/prachi912">
+<a href="https://github.com/chauhan-prachi">
   <img src="https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github" alt="GitHub">
 </a>
 
@@ -787,7 +786,7 @@ Interested in building practical software and data-driven systems using:
   🚀 Live Demo
 </a>
 &nbsp;&nbsp;•&nbsp;&nbsp;
-<a href="github.com/chauhan-prachi/VibeStream">
+<a href="https://github.com/chauhan-prachi/VibeStream">
   💻 Source Code
 </a>
 
