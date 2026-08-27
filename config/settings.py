@@ -5,34 +5,20 @@ import dj_database_url
 
 load_dotenv()
 
-# =========================
 # Paths
-# =========================
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# =========================
 # Environment Variables
-# =========================
-
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-
 SECRET_KEY = os.getenv("SECRET_KEY")
-
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
-
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
     "localhost,127.0.0.1"
 ).split(",")
 
-
-# =========================
 # Application Definition
-# =========================
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -40,11 +26,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "movies",
     "accounts",
-
-    # Django Allauth
     "django.contrib.sites",
     "allauth",
     "allauth.account",
@@ -52,31 +35,20 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
 ]
 
-
-# =========================
 # Middleware
-# =========================
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-
     "allauth.account.middleware.AccountMiddleware",
-
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-
-# =========================
 # Django Configuration
-# =========================
-
 ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
@@ -96,22 +68,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
-# =========================
 # Database
-# =========================
-# Local development → SQLite
-# Render → PostgreSQL through DATABASE_URL
-
-# DATABASES = {
-#     "default": dj_database_url.config(
-#         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-#         conn_max_age=600,
-#     )
-# }
-
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 print("DATABASE_URL EXISTS:", bool(DATABASE_URL))
 
 DATABASES = {
@@ -123,12 +81,7 @@ DATABASES = {
 
 print("DATABASE ENGINE:", DATABASES["default"]["ENGINE"])
 
-
-
-# =========================
 # Password Validation
-# =========================
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -144,26 +97,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# =========================
 # Internationalization
-# =========================
-
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# =========================
 # Static Files
-# =========================
-
 STATIC_URL = "/static/"
-
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 if not DEBUG:
@@ -171,34 +112,17 @@ if not DEBUG:
         "whitenoise.storage.CompressedManifestStaticFilesStorage"
     )
 
-
-# =========================
 # Media Files
-# =========================
-
 MEDIA_URL = "/media/"
-
 MEDIA_ROOT = BASE_DIR / "media"
 
-
-# =========================
 # Default Primary Key
-# =========================
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-# =========================
 # Django Sites
-# =========================
-
 SITE_ID = 1
 
-
-# =========================
 # Authentication
-# =========================
-
 AUTHENTICATION_BACKENDS = [
     "accounts.backends.EmailOrUsernameBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
@@ -206,16 +130,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = "/accounts/login/"
-
 LOGIN_REDIRECT_URL = "/"
-
 LOGOUT_REDIRECT_URL = "/"
 
-
-# =========================
 # Django Allauth
-# =========================
-
 ACCOUNT_LOGIN_METHODS = {"username", "email"}
 
 ACCOUNT_SIGNUP_FIELDS = [
@@ -226,16 +144,10 @@ ACCOUNT_SIGNUP_FIELDS = [
 ]
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
-
 SOCIALACCOUNT_LOGIN_ON_GET = True
-
 SOCIALACCOUNT_STORE_TOKENS = False
 
-
-# =========================
 # Google OAuth
-# =========================
-
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APP": {
@@ -252,20 +164,11 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-
-# =========================
 # Email
-# =========================
-
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
 DEFAULT_FROM_EMAIL = "noreply@vibestream.com"
 
-
-# =========================
 # Site Information
-# =========================
-
 DOMAIN = os.getenv(
     "DOMAIN",
     "127.0.0.1:8000"
@@ -273,23 +176,17 @@ DOMAIN = os.getenv(
 
 SITE_NAME = "VibeStream"
 
-# =========================
 # Production Security
-# =========================
-
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-
     SECURE_PROXY_SSL_HEADER = (
         "HTTP_X_FORWARDED_PROTO",
         "https",
     )
-
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-
 else:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
