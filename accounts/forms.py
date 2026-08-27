@@ -1,22 +1,9 @@
-"""
-Authentication and signup forms for VibeStream.
-These forms power the custom login / signup views while keeping
-the dark Netflix-style UI intact.
-"""
-
 from django import forms
 from django.contrib.auth.models import User
 
 
 class SignupForm(forms.Form):
-    """
-    Signup form that collects:
-      - Full Name
-      - Username  (required)
-      - Email     (required)
-      - Password  (required)
-      - Confirm Password
-    """
+    
 
     full_name = forms.CharField(
         label="Full Name",
@@ -64,11 +51,7 @@ class SignupForm(forms.Form):
 
 
 class LoginForm(forms.Form):
-    """
-    Login form with a single field that accepts either a username
-    or an email address.
-    """
-
+    
     username = forms.CharField(
         label="Username or Email",
         widget=forms.TextInput(
