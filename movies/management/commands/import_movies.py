@@ -1,20 +1,23 @@
 import time
+
 import requests
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
 from movies.models import Movie
+from movies.services.data_cleaner import clean_movie_data
 
 
 TMDB_BASE = "https://api.themoviedb.org/3"
 
-# High quality image URLs
 POSTER_BASE = "https://image.tmdb.org/t/p/w780"
+
 BACKDROP_BASE = "https://image.tmdb.org/t/p/original"
 
 
 class Command(BaseCommand):
+
     help = "Import movies and TV shows from TMDb"
 
     def handle(self, *args, **kwargs):
@@ -33,7 +36,6 @@ class Command(BaseCommand):
             ("movie/now_playing", "Now Playing", "movie"),
             ("movie/upcoming", "Upcoming", "movie"),
             ("discover/movie", "Discover", "movie"),
-
             ("tv/popular", "TV Shows", "tv"),
             ("tv/top_rated", "TV Shows", "tv"),
             ("tv/on_the_air", "TV Shows", "tv"),
@@ -48,7 +50,6 @@ class Command(BaseCommand):
                 f"Importing {category}..."
             )
 
-            # Import first 5 pages
             for page in range(1, 6):
 
                 url = (
@@ -57,10 +58,6 @@ class Command(BaseCommand):
                 )
 
                 response = None
-
-                # ---------------------------------
-                # Retry up to 3 times
-                # ---------------------------------
 
                 for attempt in range(3):
 
@@ -93,11 +90,8 @@ class Command(BaseCommand):
                 if response is None:
                     continue
 
-                # ---------------------------------
-                # Parse response
-                # ---------------------------------
-
                 try:
+
                     data = response.json()
 
                 except ValueError:
@@ -111,52 +105,18 @@ class Command(BaseCommand):
 
                     continue
 
-                # ---------------------------------
-                # Process each item
-                # ---------------------------------
-
                 for item in data.get("results", []):
 
-                    tmdb_id = item.get("id")
+                    cleaned_data = clean_movie_data(item)
 
-                    if not tmdb_id:
+                    if not cleaned_data:
                         continue
 
-                    # ---------------------------------
-                    # Title
-                    # ---------------------------------
+                    tmdb_id = cleaned_data["tmdb_id"]
 
-                    title = (
-                        item.get("title")
-                        or item.get("name")
-                        or "Unknown"
-                    )
+                    title = cleaned_data["title"]
 
-                    # ---------------------------------
-                    # Release year
-                    # ---------------------------------
-
-                    release = (
-                        item.get("release_date")
-                        or item.get("first_air_date")
-                        or ""
-                    )
-
-                    try:
-
-                        release_year = (
-                            int(release[:4])
-                            if release
-                            else 0
-                        )
-
-                    except (ValueError, TypeError):
-
-                        release_year = 0
-
-                    # ---------------------------------
-                    # Poster
-                    # ---------------------------------
+                    release_year = cleaned_data["release_year"]
 
                     poster = (
                         POSTER_BASE + item["poster_path"]
@@ -164,37 +124,16 @@ class Command(BaseCommand):
                         else ""
                     )
 
-                    # ---------------------------------
-                    # Backdrop
-                    # ---------------------------------
-
                     backdrop = (
                         BACKDROP_BASE + item["backdrop_path"]
                         if item.get("backdrop_path")
                         else ""
                     )
 
-                    # ---------------------------------
-                    # Find existing movie
-                    # ---------------------------------
-
                     existing_movie = Movie.objects.filter(
                         tmdb_id=tmdb_id,
                         media_type=media_type
                     ).first()
-
-                    # ---------------------------------
-                    # Permanent poster handling
-                    #
-                    # 1. TMDb has poster
-                    #       → use it
-                    #
-                    # 2. TMDb has no poster
-                    #       → keep existing poster
-                    #
-                    # 3. No existing poster
-                    #       → empty string
-                    # ---------------------------------
 
                     if poster:
 
@@ -211,10 +150,6 @@ class Command(BaseCommand):
 
                         poster_url = ""
 
-                    # ---------------------------------
-                    # Backdrop handling
-                    # ---------------------------------
-
                     if backdrop:
 
                         backdrop_url = backdrop
@@ -224,17 +159,11 @@ class Command(BaseCommand):
                         and existing_movie.backdrop_url
                     ):
 
-                        backdrop_url = (
-                            existing_movie.backdrop_url
-                        )
+                        backdrop_url = existing_movie.backdrop_url
 
                     else:
 
                         backdrop_url = ""
-
-                    # ---------------------------------
-                    # Fetch additional details
-                    # ---------------------------------
 
                     detail_url = (
                         f"{TMDB_BASE}/{media_type}/{tmdb_id}"
@@ -253,17 +182,11 @@ class Command(BaseCommand):
 
                         if detail_response.status_code == 200:
 
-                            detail = (
-                                detail_response.json()
-                            )
+                            detail = detail_response.json()
 
                     except requests.RequestException:
 
                         detail = {}
-
-                    # ---------------------------------
-                    # Genres
-                    # ---------------------------------
 
                     genres = ", ".join(
                         g.get("name", "")
@@ -273,10 +196,6 @@ class Command(BaseCommand):
                         )
                         if g.get("name")
                     )
-
-                    # ---------------------------------
-                    # Trailer
-                    # ---------------------------------
 
                     trailer_key = ""
 
@@ -288,7 +207,6 @@ class Command(BaseCommand):
                         []
                     )
 
-                    # Prefer official trailer
                     for video in videos:
 
                         if (
@@ -297,13 +215,13 @@ class Command(BaseCommand):
                             and video.get("official") is True
                         ):
 
-                            trailer_key = (
-                                video.get("key", "")
+                            trailer_key = video.get(
+                                "key",
+                                ""
                             )
 
                             break
 
-                    # Fallback to any YouTube trailer
                     if not trailer_key:
 
                         for video in videos:
@@ -313,15 +231,12 @@ class Command(BaseCommand):
                                 and video.get("type") == "Trailer"
                             ):
 
-                                trailer_key = (
-                                    video.get("key", "")
+                                trailer_key = video.get(
+                                    "key",
+                                    ""
                                 )
 
                                 break
-
-                    # ---------------------------------
-                    # Director
-                    # ---------------------------------
 
                     director = ""
 
@@ -342,10 +257,6 @@ class Command(BaseCommand):
 
                             break
 
-                    # ---------------------------------
-                    # Cast
-                    # ---------------------------------
-
                     cast = ", ".join(
                         actor.get("name", "")
                         for actor in detail.get(
@@ -357,10 +268,6 @@ class Command(BaseCommand):
                         )[:8]
                         if actor.get("name")
                     )
-
-                    # ---------------------------------
-                    # Runtime
-                    # ---------------------------------
 
                     if media_type == "movie":
 
@@ -382,79 +289,32 @@ class Command(BaseCommand):
                             else 0
                         )
 
-                    # ---------------------------------
-                    # Save / Update Movie
-                    # ---------------------------------
-
                     Movie.objects.update_or_create(
-
                         tmdb_id=tmdb_id,
-
                         media_type=media_type,
-
                         defaults={
-
                             "title": title,
-
-                            "overview": item.get(
-                                "overview",
-                                ""
-                            ),
-
+                            "overview": cleaned_data["overview"],
                             "genre": genres,
-
                             "release_year": release_year,
-
-                            "language": item.get(
-                                "original_language",
-                                "en"
-                            ),
-
+                            "language": cleaned_data["language"],
                             "runtime": runtime,
-
                             "director": director,
-
                             "cast": cast,
-
-                            "rating": item.get(
-                                "vote_average",
-                                0
-                            ),
-
-                            "popularity": item.get(
-                                "popularity",
-                                0
-                            ),
-
-                            "vote_count": item.get(
-                                "vote_count",
-                                0
-                            ),
-
+                            "rating": cleaned_data["rating"],
+                            "popularity": cleaned_data["popularity"],
+                            "vote_count": cleaned_data["vote_count"],
                             "poster_url": poster_url,
-
                             "backdrop_url": backdrop_url,
-
                             "trailer_key": trailer_key,
-
                             "category": category,
-
                             "media_type": media_type,
                         },
                     )
 
                     imported += 1
 
-            # ---------------------------------
-            # Small delay between endpoints
-            # Helps avoid excessive API requests
-            # ---------------------------------
-
             time.sleep(1)
-
-        # ---------------------------------
-        # Finished
-        # ---------------------------------
 
         self.stdout.write(
             self.style.SUCCESS(
@@ -462,10 +322,13 @@ class Command(BaseCommand):
                 f"items successfully!"
             )
         )
-        self.stdout.write(
-        f"FINAL MOVIE COUNT: {Movie.objects.filter(media_type='movie').count()}"
-)
 
         self.stdout.write(
-        f"FINAL TV COUNT: {Movie.objects.filter(media_type='tv').count()}"
-)
+            f"FINAL MOVIE COUNT: "
+            f"{Movie.objects.filter(media_type='movie').count()}"
+        )
+
+        self.stdout.write(
+            f"FINAL TV COUNT: "
+            f"{Movie.objects.filter(media_type='tv').count()}"
+        )
