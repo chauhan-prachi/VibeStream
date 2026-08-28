@@ -148,22 +148,16 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_STORE_TOKENS = False
 
 # Google OAuth
+
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
-        "APP": {
-            "client_id": os.getenv("GOOGLE_CLIENT_ID", ""),
-            "secret": os.getenv("GOOGLE_CLIENT_SECRET", ""),
-            "settings": {
-                "scope": [
-                    "openid",
-                    "email",
-                    "profile",
-                ],
-            },
-        },
+        "SCOPE": [
+            "openid",
+            "email",
+            "profile",
+        ],
     }
 }
-
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "noreply@vibestream.com"
