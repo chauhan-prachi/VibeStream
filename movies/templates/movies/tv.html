@@ -1,19 +1,18 @@
 {% load static %}
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>TV Shows - VibeStream</title>
 
-    <link rel="stylesheet"
-          href="{% static 'css/movie_card.css' %}">
+    <link rel="stylesheet" href="{% static 'css/movie_card.css' %}">
 
     <style>
 
@@ -31,6 +30,7 @@
         }
 
         .container {
+            width: 100%;
             max-width: 1400px;
             margin: 0 auto;
             padding: 30px;
@@ -71,12 +71,10 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(
-                auto-fill,
-                minmax(180px, 1fr)
-            );
-
-            gap: 25px;
+            grid-template-columns: repeat(7, 180px);
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
         }
 
         .empty {
@@ -86,7 +84,34 @@
             margin-top: 60px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1400px) {
+
+            .grid {
+                grid-template-columns: repeat(6, 180px);
+                justify-content: center;
+            }
+
+        }
+
+        @media (max-width: 1200px) {
+
+            .grid {
+                grid-template-columns: repeat(5, 180px);
+                justify-content: center;
+            }
+
+        }
+
+        @media (max-width: 1000px) {
+
+            .grid {
+                grid-template-columns: repeat(4, 180px);
+                justify-content: center;
+            }
+
+        }
+
+        @media (max-width: 800px) {
 
             .container {
                 padding: 20px;
@@ -97,10 +122,32 @@
             }
 
             .grid {
-                grid-template-columns:
-                    repeat(2, minmax(140px, 1fr));
+                grid-template-columns: repeat(3, 180px);
+                gap: 18px;
+                justify-content: center;
+            }
 
-                gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                padding: 15px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, 180px);
+                gap: 14px;
+                justify-content: center;
+            }
+
+        }
+
+        @media (max-width: 400px) {
+
+            .grid {
+                grid-template-columns: repeat(2, 150px);
+                gap: 12px;
             }
 
         }
@@ -111,44 +158,43 @@
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <a href="{% url 'home' %}" class="back-btn">
-        ← Back to Home
-    </a>
+        <a href="{% url 'home' %}" class="back-btn">
+            ← Back to Home
+        </a>
 
-    <h1>📺 TV Shows</h1>
+        <h1>📺 TV Shows</h1>
 
-    <p class="subtitle">
-        Browse popular TV shows available on VibeStream
-    </p>
-
-    <p class="tv-count">
-        {{ tv_shows.count }} TV shows available
-    </p>
-
-
-    {% if tv_shows %}
-
-        <div class="grid">
-
-            {% for movie in tv_shows %}
-
-                {% include "movies/components/movie_card.html" %}
-
-            {% endfor %}
-
-        </div>
-
-    {% else %}
-
-        <p class="empty">
-            No TV shows available in your VibeStream library.
+        <p class="subtitle">
+            Browse popular TV shows available on VibeStream
         </p>
 
-    {% endif %}
+        <p class="tv-count">
+            {{ tv_shows.count }} TV shows available
+        </p>
 
-</div>
+        {% if tv_shows %}
+
+            <div class="grid">
+
+                {% for movie in tv_shows %}
+
+                    {% include "movies/components/movie_card.html" %}
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="empty">
+                No TV shows available in your VibeStream library.
+            </p>
+
+        {% endif %}
+
+    </div>
 
 </body>
 

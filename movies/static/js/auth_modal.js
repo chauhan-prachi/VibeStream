@@ -1,71 +1,37 @@
 function openAuthModal() {
-    document.getElementById("authModal").classList.remove("hidden");
-    showEmailStep();
+    const modal = document.getElementById("authModal");
+
+    if (!modal) return;
+
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
 }
 
 function closeAuthModal() {
-    document.getElementById("authModal").classList.add("hidden");
+    const modal = document.getElementById("authModal");
+
+    if (!modal) return;
+
+    modal.classList.add("hidden");
+    document.body.style.overflow = "";
 }
 
-async function showPasswordStep() {
-    const identifier = document.getElementById("authIdentifier").value.trim();
-
-    if (!identifier) {
-        alert("Please enter your email or mobile number.");
-        return;
-    }
-
-    const response = await fetch("/accounts/check-user/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-CSRFToken": getCSRFToken(),
-        },
-        body: new URLSearchParams({
-            identifier: identifier
-        })
-    });
-
-    const data = await response.json();
-
-    if (data.exists) {
-        document.getElementById("loginUsername").value = identifier;
-
-        document.getElementById("emailStep").classList.add("hidden");
-        document.getElementById("passwordStep").classList.remove("hidden");
-    } else {
-        window.location.href = "/accounts/signup/";
-    }
-}
-
-function showEmailStep() {
-    document.getElementById("passwordStep").classList.add("hidden");
-    document.getElementById("emailStep").classList.remove("hidden");
-}
-
-function togglePassword(id, el) {
+function togglePassword(id, element) {
     const input = document.getElementById(id);
+
+    if (!input) return;
 
     if (input.type === "password") {
         input.type = "text";
-        el.innerText = "Hide";
+        element.textContent = "Hide";
     } else {
         input.type = "password";
-        el.innerText = "Show";
+        element.textContent = "Show";
     }
 }
 
-function getCSRFToken() {
-    const name = "csrftoken";
-    const cookies = document.cookie.split(";");
-
-    for (let cookie of cookies) {
-        cookie = cookie.trim();
-
-        if (cookie.startsWith(name + "=")) {
-            return cookie.substring(name.length + 1);
-        }
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeAuthModal();
     }
-
-    return "";
-}
+});

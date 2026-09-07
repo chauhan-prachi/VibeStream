@@ -1,18 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.conf import settings
+from django.db.models import Case, When
 import json
 import requests
-from django.conf import settings
+
 from .models import Movie, WatchList, ContinueWatching
-from django.db.models import Case, When
 
-# =========================
-# Home Page
-# =========================
+
 def home(request):
-
     print(
         "DATABASE ENGINE:",
         settings.DATABASES["default"]["ENGINE"]
@@ -32,19 +31,11 @@ def home(request):
         ).count()
     )
 
-    # =========================
-    # Popular Movies
-    # =========================
-
     popular_movies = (
         Movie.objects
         .filter(media_type="movie")
         .order_by("-popularity")[:50]
     )
-
-    # =========================
-    # Top Rated Movies
-    # =========================
 
     top_rated_movies = (
         Movie.objects
@@ -55,10 +46,6 @@ def home(request):
         .order_by("-rating")[:50]
     )
 
-    # =========================
-    # Now Playing
-    # =========================
-
     now_playing_movies = (
         Movie.objects
         .filter(
@@ -67,10 +54,6 @@ def home(request):
         )
         .order_by("-popularity")[:50]
     )
-
-    # =========================
-    # Upcoming
-    # =========================
 
     upcoming_movies = (
         Movie.objects
@@ -81,19 +64,11 @@ def home(request):
         .order_by("-release_year")[:50]
     )
 
-    # =========================
-    # Trending TV Shows
-    # =========================
-
     trending_tv = (
         Movie.objects
         .filter(media_type="tv")
         .order_by("-popularity")[:50]
     )
-
-    # =========================
-    # Top TV Series
-    # =========================
 
     top_series = (
         Movie.objects
@@ -101,35 +76,15 @@ def home(request):
         .order_by("-rating")[:50]
     )
 
-    # =========================
-    # Trending Now / Hero Movies
-    # =========================
-
     featured_movies = list(
         Movie.objects
-        .filter(
-            media_type="movie"
-        )
-        .exclude(
-            poster_url=""
-        )
-        .exclude(
-            poster_url__isnull=True
-        )
-        .exclude(
-            backdrop_url=""
-        )
-        .exclude(
-            backdrop_url__isnull=True
-        )
-        .order_by(
-            "-popularity"
-        )[:5]
+        .filter(media_type="movie")
+        .exclude(poster_url="")
+        .exclude(poster_url__isnull=True)
+        .exclude(backdrop_url="")
+        .exclude(backdrop_url__isnull=True)
+        .order_by("-popularity")[:5]
     )
-
-    # =========================
-    # Featured Movie
-    # =========================
 
     featured_movie = (
         featured_movies[0]
@@ -137,42 +92,27 @@ def home(request):
         else None
     )
 
-    # =========================
-    # Watchlist
-    # =========================
-
     watchlist_ids = set()
 
     if request.user.is_authenticated:
-
         watchlist_ids = set(
             WatchList.objects
-            .filter(
-                user=request.user
-            )
+            .filter(user=request.user)
             .values_list(
                 "movie_id",
                 flat=True
             )
         )
 
-    # =========================
-    # Context
-    # =========================
-
     context = {
         "featured_movie": featured_movie,
         "featured_movies": featured_movies,
-
         "popular_movies": popular_movies,
         "top_rated_movies": top_rated_movies,
         "now_playing_movies": now_playing_movies,
         "upcoming_movies": upcoming_movies,
-
-        # TV
         "trending_tv": trending_tv,
         "top_series": top_series,
-
         "watchlist_ids": watchlist_ids,
     }
 
@@ -182,12 +122,8 @@ def home(request):
         context
     )
 
-# =========================
-# AI Semantic Search + Advanced Filters
-# =========================
 
 def search(request):
-
     query = request.GET.get("q", "").strip()
     genre = request.GET.get("genre", "").strip()
     year = request.GET.get("year", "").strip()
@@ -195,18 +131,9 @@ def search(request):
     rating = request.GET.get("rating", "").strip()
     sort = request.GET.get("sort", "").strip()
 
-    # ---------------------------------
-    # Start with all movies
-    # ---------------------------------
-
     movies = Movie.objects.all()
 
-    # ---------------------------------
-    # AI SEMANTIC SEARCH
-    # ---------------------------------
-
     if query:
-
         from .ai_search import semantic_search
 
         ai_results = semantic_search(
@@ -217,35 +144,28 @@ def search(request):
         ids = [movie.id for movie in ai_results]
 
         if ids:
-            # Preserve AI relevance order
             preserved_order = Case(
                 *[
-                    When(id=movie_id, then=position)
+                    When(
+                        id=movie_id,
+                        then=position
+                    )
                     for position, movie_id in enumerate(ids)
                 ]
             )
 
-            movies = Movie.objects.filter(
-                id__in=ids
-            ).order_by(
-                preserved_order
+            movies = (
+                Movie.objects
+                .filter(id__in=ids)
+                .order_by(preserved_order)
             )
-
         else:
             movies = Movie.objects.none()
-
-    # ---------------------------------
-    # GENRE FILTER
-    # ---------------------------------
 
     if genre:
         movies = movies.filter(
             genre__icontains=genre
         )
-
-    # ---------------------------------
-    # YEAR FILTER
-    # ---------------------------------
 
     if year:
         try:
@@ -255,18 +175,10 @@ def search(request):
         except (ValueError, TypeError):
             pass
 
-    # ---------------------------------
-    # LANGUAGE FILTER
-    # ---------------------------------
-
     if language:
         movies = movies.filter(
             language__iexact=language
         )
-
-    # ---------------------------------
-    # RATING FILTER
-    # ---------------------------------
 
     if rating:
         try:
@@ -276,50 +188,41 @@ def search(request):
         except (ValueError, TypeError):
             pass
 
-    # ---------------------------------
-    # SORTING
-    # ---------------------------------
-
     if sort == "rating":
-
         movies = movies.order_by(
             "-rating"
         )
-
     elif sort == "year":
-
         movies = movies.order_by(
             "-release_year"
         )
-
     elif sort == "popularity":
-
         movies = movies.order_by(
             "-popularity"
         )
-
     elif not query:
-
         movies = movies.order_by(
             "-popularity"
         )
-
-    # ---------------------------------
-    # DROPDOWN VALUES
-    # ---------------------------------
 
     genres = (
         Movie.objects
         .exclude(genre__isnull=True)
         .exclude(genre="")
-        .values_list("genre", flat=True)
+        .values_list(
+            "genre",
+            flat=True
+        )
         .distinct()
     )
 
     years = (
         Movie.objects
         .exclude(release_year__isnull=True)
-        .values_list("release_year", flat=True)
+        .values_list(
+            "release_year",
+            flat=True
+        )
         .distinct()
         .order_by("-release_year")
     )
@@ -328,7 +231,10 @@ def search(request):
         Movie.objects
         .exclude(language__isnull=True)
         .exclude(language="")
-        .values_list("language", flat=True)
+        .values_list(
+            "language",
+            flat=True
+        )
         .distinct()
     )
 
@@ -338,11 +244,9 @@ def search(request):
         {
             "movies": movies,
             "query": query,
-
             "genres": genres,
             "years": years,
             "languages": languages,
-
             "selected_genre": genre,
             "selected_year": year,
             "selected_language": language,
@@ -350,12 +254,9 @@ def search(request):
             "selected_sort": sort,
         },
     )
-# =========================
-# Movie Detail Page
-# =========================
+
 
 def movie_detail(request, movie_id):
-
     movie = get_object_or_404(
         Movie,
         id=movie_id
@@ -368,16 +269,9 @@ def movie_detail(request, movie_id):
         top_n=10,
     )
 
-    # =========================
-    # Fetch Cast From TMDb
-    # =========================
-
     cast_members = []
 
     try:
-        import requests
-        from django.conf import settings
-
         media_type = movie.media_type or "movie"
 
         url = (
@@ -394,7 +288,6 @@ def movie_detail(request, movie_id):
         )
 
         if response.status_code == 200:
-
             data = response.json()
 
             cast_members = data.get(
@@ -403,7 +296,6 @@ def movie_detail(request, movie_id):
             )[:10]
 
     except Exception as e:
-
         print(
             "TMDb cast error:",
             e
@@ -418,29 +310,25 @@ def movie_detail(request, movie_id):
             "cast_members": cast_members,
         },
     )
-# =========================
-# Watch Page
-# =========================
+
 
 def watch_movie(request, movie_id):
+    movie = get_object_or_404(
+        Movie,
+        id=movie_id
+    )
 
-    movie = get_object_or_404(Movie, id=movie_id)
-
-    # -------------------------
-    # Add to Continue Watching
-    # -------------------------
     if request.user.is_authenticated:
         ContinueWatching.objects.update_or_create(
             user=request.user,
             movie=movie,
-            defaults={"progress": 5},
+            defaults={
+                "progress": 5
+            },
         )
 
     youtube_key = None
 
-    # -------------------------
-    # Search YouTube
-    # -------------------------
     search_queries = [
         f"{movie.title} full movie official",
         f"{movie.title} full movie",
@@ -465,7 +353,11 @@ def watch_movie(request, movie_id):
             )
 
             if yt_response.status_code == 200:
-                items = yt_response.json().get("items", [])
+                items = yt_response.json().get(
+                    "items",
+                    []
+                )
+
                 if items:
                     youtube_key = items[0]["id"]["videoId"]
                     break
@@ -473,61 +365,83 @@ def watch_movie(request, movie_id):
         except requests.RequestException:
             pass
 
-    # -------------------------
-    # Fallback to TMDb Trailer
-    # -------------------------
     if not youtube_key and movie.tmdb_id:
         try:
             tmdb_response = requests.get(
-                f"https://api.themoviedb.org/3/{movie.media_type}/{movie.tmdb_id}/videos",
-                params={"api_key": settings.TMDB_API_KEY},
+                f"https://api.themoviedb.org/3/"
+                f"{movie.media_type}/{movie.tmdb_id}/videos",
+                params={
+                    "api_key": settings.TMDB_API_KEY
+                },
                 timeout=10,
             )
 
             if tmdb_response.status_code == 200:
-                videos = tmdb_response.json().get("results", [])
+                videos = tmdb_response.json().get(
+                    "results",
+                    []
+                )
 
                 official_trailer = None
                 trailer = None
 
                 for video in videos:
-
                     if video.get("site") != "YouTube":
                         continue
 
-                    if video.get("type") == "Trailer" and video.get("official"):
+                    if (
+                        video.get("type") == "Trailer"
+                        and video.get("official")
+                    ):
                         official_trailer = video.get("key")
                         break
 
-                    elif video.get("type") == "Trailer" and not trailer:
+                    elif (
+                        video.get("type") == "Trailer"
+                        and not trailer
+                    ):
                         trailer = video.get("key")
 
-                youtube_key = official_trailer or trailer
+                youtube_key = (
+                    official_trailer
+                    or trailer
+                )
 
         except requests.RequestException:
             pass
 
-    print("MOVIE:", movie.title)
-    print("TMDB ID:", movie.tmdb_id)
-    print("FINAL YOUTUBE KEY:", youtube_key)
+    print(
+        "MOVIE:",
+        movie.title
+    )
 
-    # -------------------------
-    # Redirect directly to YouTube
-    # -------------------------
+    print(
+        "TMDB ID:",
+        movie.tmdb_id
+    )
+
+    print(
+        "FINAL YOUTUBE KEY:",
+        youtube_key
+    )
+
     if youtube_key:
-        return redirect(f"https://www.youtube.com/watch?v={youtube_key}")
+        return redirect(
+            f"https://www.youtube.com/watch?v={youtube_key}"
+        )
 
-    return redirect("movie_detail", movie_id=movie.id)
+    return redirect(
+        "movie_detail",
+        movie_id=movie.id
+    )
 
-
-# =========================
-# Remove from Continue Watching
-# =========================
 
 @login_required
 def remove_from_continue_watching(request, movie_id):
-
-    movie = get_object_or_404(Movie, id=movie_id)
+    movie = get_object_or_404(
+        Movie,
+        id=movie_id
+    )
 
     ContinueWatching.objects.filter(
         user=request.user,
@@ -535,18 +449,19 @@ def remove_from_continue_watching(request, movie_id):
     ).delete()
 
     return redirect(
-        request.META.get("HTTP_REFERER", "profile")
+        request.META.get(
+            "HTTP_REFERER",
+            "profile"
+        )
     )
 
 
-# =========================
-# Add to Watchlist
-# =========================
-
 @login_required
 def add_to_watchlist(request, movie_id):
-
-    movie = get_object_or_404(Movie, id=movie_id)
+    movie = get_object_or_404(
+        Movie,
+        id=movie_id
+    )
 
     WatchList.objects.get_or_create(
         user=request.user,
@@ -554,18 +469,19 @@ def add_to_watchlist(request, movie_id):
     )
 
     return redirect(
-        request.META.get("HTTP_REFERER", "home")
+        request.META.get(
+            "HTTP_REFERER",
+            "home"
+        )
     )
 
 
-# =========================
-# Remove from Watchlist
-# =========================
-
 @login_required
 def remove_from_watchlist(request, movie_id):
-
-    movie = get_object_or_404(Movie, id=movie_id)
+    movie = get_object_or_404(
+        Movie,
+        id=movie_id
+    )
 
     WatchList.objects.filter(
         user=request.user,
@@ -573,16 +489,19 @@ def remove_from_watchlist(request, movie_id):
     ).delete()
 
     return redirect(
-        request.META.get("HTTP_REFERER", "profile")
+        request.META.get(
+            "HTTP_REFERER",
+            "profile"
+        )
     )
-# =========================
-# Toggle Watchlist
-# =========================
+
 
 @login_required
 def toggle_watchlist(request, movie_id):
-
-    movie = get_object_or_404(Movie, id=movie_id)
+    movie = get_object_or_404(
+        Movie,
+        id=movie_id
+    )
 
     item = WatchList.objects.filter(
         user=request.user,
@@ -598,38 +517,35 @@ def toggle_watchlist(request, movie_id):
         )
 
     return redirect(
-        request.META.get("HTTP_REFERER", "home")
+        request.META.get(
+            "HTTP_REFERER",
+            "home"
+        )
     )
 
-# =========================
-# Watchlist Page (See All)
-# =========================
 
-@login_required
 def watchlist_page(request):
+    watchlist = []
 
-    watchlist = (
-        WatchList.objects
-        .filter(user=request.user)
-        .select_related("movie")
-    )
+    if request.user.is_authenticated:
+        watchlist = (
+            WatchList.objects
+            .filter(user=request.user)
+            .select_related("movie")
+            .order_by("-id")
+        )
 
     return render(
         request,
-        "movies/watchlist.html",
+        "movies/favorites.html",
         {
             "watchlist": watchlist,
         },
     )
 
 
-# =========================
-# Continue Watching Page (See All)
-# =========================
-
 @login_required
 def continue_watching_page(request):
-
     continue_watching = (
         ContinueWatching.objects
         .filter(user=request.user)
@@ -645,47 +561,36 @@ def continue_watching_page(request):
         },
     )
 
-# ========================= 
-# Categories Page 
-# ========================= 
- 
-def categories_page(request): 
- 
-    genre_movies = {} 
- 
-    movies = Movie.objects.all() 
- 
-    for movie in movies: 
- 
-        if movie.genre: 
- 
-            genres = [ 
-                g.strip() 
-                for g in movie.genre.split(",") 
-            ] 
- 
-            for genre in genres: 
- 
-                if genre not in genre_movies: 
-                    genre_movies[genre] = [] 
- 
-                if len(genre_movies[genre]) < 12: 
-                    genre_movies[genre].append(movie) 
- 
-    return render( 
-        request, 
-        "movies/categories.html", 
-        { 
-            "genre_movies": genre_movies, 
-        }, 
-    ) 
- 
- # =========================
-# TV Page
-# =========================
+
+def categories_page(request):
+    genre_movies = {}
+
+    movies = Movie.objects.all()
+
+    for movie in movies:
+        if movie.genre:
+            genres = [
+                g.strip()
+                for g in movie.genre.split(",")
+            ]
+
+            for genre in genres:
+                if genre not in genre_movies:
+                    genre_movies[genre] = []
+
+                if len(genre_movies[genre]) < 12:
+                    genre_movies[genre].append(movie)
+
+    return render(
+        request,
+        "movies/categories.html",
+        {
+            "genre_movies": genre_movies,
+        },
+    )
+
 
 def tv_page(request):
-
     tv_shows = (
         Movie.objects
         .filter(media_type="tv")
@@ -698,7 +603,10 @@ def tv_page(request):
         watchlist_ids = set(
             WatchList.objects
             .filter(user=request.user)
-            .values_list("movie_id", flat=True)
+            .values_list(
+                "movie_id",
+                flat=True
+            )
         )
 
     return render(
@@ -709,18 +617,18 @@ def tv_page(request):
             "watchlist_ids": watchlist_ids,
         },
     )
- 
- 
-# =========================
-# Favorites / My List Page
-# =========================
 
-@login_required
+
 def favorites_page(request):
+    watchlist = []
 
-    watchlist = WatchList.objects.filter(
-        user=request.user
-    ).select_related("movie").order_by("-id")
+    if request.user.is_authenticated:
+        watchlist = (
+            WatchList.objects
+            .filter(user=request.user)
+            .select_related("movie")
+            .order_by("-id")
+        )
 
     return render(
         request,
@@ -729,133 +637,133 @@ def favorites_page(request):
             "watchlist": watchlist,
         },
     )
- 
- 
-# ========================= 
-# Profile Page 
-# ========================= 
- 
-from django.contrib.auth.models import User 
- 
-@login_required 
-def profile_page(request): 
- 
-    # ------------------------- 
-    # Handle Edit Profile 
-    # ------------------------- 
-    if request.method == "POST": 
- 
-        username = request.POST.get("username", "").strip() 
-        email = request.POST.get("email", "").strip() 
- 
-        # Prevent duplicate usernames 
-        if User.objects.filter(username=username).exclude(id=request.user.id).exists(): 
- 
-            watchlist = ( 
-                WatchList.objects 
-                .filter(user=request.user) 
-                .select_related("movie") 
-            ) 
- 
-            continue_watching = ( 
-                ContinueWatching.objects 
-                .filter(user=request.user) 
-                .select_related("movie") 
-                .order_by("-updated_at")[:10] 
-            ) 
- 
-            return render( 
-                request, 
-                "movies/profile.html", 
-                { 
-                    "watchlist": watchlist, 
-                    "continue_watching": continue_watching, 
-                    "watchlist_count": watchlist.count(), 
-                    "continue_count": continue_watching.count(), 
-                    "edit_mode": True, 
-                    "error": "Username already exists.", 
-                }, 
-            ) 
- 
-        request.user.username = username 
-        request.user.email = email 
-        request.user.save() 
- 
-        return redirect("profile") 
- 
-    # ------------------------- 
-    # Normal Profile View 
-    # ------------------------- 
- 
-    watchlist = ( 
-        WatchList.objects 
-        .filter(user=request.user) 
-        .select_related("movie") 
-    ) 
- 
-    continue_watching = ( 
-        ContinueWatching.objects 
-        .filter(user=request.user) 
-        .select_related("movie") 
-        .order_by("-updated_at")[:10] 
-    ) 
- 
-    context = { 
-        "watchlist": watchlist, 
-        "continue_watching": continue_watching, 
-        "watchlist_count": watchlist.count(), 
-        "continue_count": continue_watching.count(), 
-        "edit_mode": request.GET.get("edit") == "1", 
-    } 
- 
-    return render( 
-        request, 
-        "movies/profile.html", 
-        context, 
-    ) 
-# ========================= 
-# Save Video Progress 
-# ========================= 
- 
-@login_required 
-@require_POST 
-def save_progress(request, movie_id): 
- 
-    movie = get_object_or_404(Movie, id=movie_id) 
- 
-    data = json.loads(request.body) 
- 
-    progress = int(data.get("progress", 0)) 
- 
-    ContinueWatching.objects.update_or_create( 
-        user=request.user, 
-        movie=movie, 
-        defaults={"progress": progress}, 
-    ) 
- 
-    return JsonResponse({"status": "ok"})   
 
-   # =========================
-# Browse / See All Pages
-# =========================
+
+@login_required
+def profile_page(request):
+    if request.method == "POST":
+        username = request.POST.get(
+            "username",
+            ""
+        ).strip()
+
+        email = request.POST.get(
+            "email",
+            ""
+        ).strip()
+
+        if User.objects.filter(
+            username=username
+        ).exclude(
+            id=request.user.id
+        ).exists():
+
+            watchlist = (
+                WatchList.objects
+                .filter(user=request.user)
+                .select_related("movie")
+            )
+
+            continue_watching = (
+                ContinueWatching.objects
+                .filter(user=request.user)
+                .select_related("movie")
+                .order_by("-updated_at")[:10]
+            )
+
+            return render(
+                request,
+                "movies/profile.html",
+                {
+                    "watchlist": watchlist,
+                    "continue_watching": continue_watching,
+                    "watchlist_count": watchlist.count(),
+                    "continue_count": continue_watching.count(),
+                    "edit_mode": True,
+                    "error": "Username already exists.",
+                },
+            )
+
+        request.user.username = username
+        request.user.email = email
+        request.user.save()
+
+        return redirect("profile")
+
+    watchlist = (
+        WatchList.objects
+        .filter(user=request.user)
+        .select_related("movie")
+    )
+
+    continue_watching = (
+        ContinueWatching.objects
+        .filter(user=request.user)
+        .select_related("movie")
+        .order_by("-updated_at")[:10]
+    )
+
+    context = {
+        "watchlist": watchlist,
+        "continue_watching": continue_watching,
+        "watchlist_count": watchlist.count(),
+        "continue_count": continue_watching.count(),
+        "edit_mode": request.GET.get("edit") == "1",
+    }
+
+    return render(
+        request,
+        "movies/profile.html",
+        context,
+    )
+
+
+@login_required
+@require_POST
+def save_progress(request, movie_id):
+    movie = get_object_or_404(
+        Movie,
+        id=movie_id
+    )
+
+    data = json.loads(request.body)
+
+    progress = int(
+        data.get(
+            "progress",
+            0
+        )
+    )
+
+    ContinueWatching.objects.update_or_create(
+        user=request.user,
+        movie=movie,
+        defaults={
+            "progress": progress
+        },
+    )
+
+    return JsonResponse(
+        {
+            "status": "ok"
+        }
+    )
+
 
 def browse(request, section):
-
     watchlist_ids = set()
 
     if request.user.is_authenticated:
         watchlist_ids = set(
             WatchList.objects
             .filter(user=request.user)
-            .values_list("movie_id", flat=True)
+            .values_list(
+                "movie_id",
+                flat=True
+            )
         )
 
-    # =========================
-    # Trending Movies
-    # =========================
-
     if section == "trending":
-
         movies = (
             Movie.objects
             .filter(media_type="movie")
@@ -864,12 +772,7 @@ def browse(request, section):
 
         title = "🔥 Trending Movies"
 
-    # =========================
-    # Trending TV
-    # =========================
-
     elif section == "trending_tv":
-
         movies = (
             Movie.objects
             .filter(media_type="tv")
@@ -878,26 +781,19 @@ def browse(request, section):
 
         title = "📺 Trending TV Shows"
 
-    # =========================
-    # Top Movies
-    # =========================
-
     elif section == "top_movies":
-
         movies = (
             Movie.objects
             .filter(media_type="movie")
-            .order_by("-rating", "-vote_count")
+            .order_by(
+                "-rating",
+                "-vote_count"
+            )
         )
 
         title = "🏆 Top Movies This Week"
 
-    # =========================
-    # Now Playing
-    # =========================
-
     elif section == "now_playing":
-
         movies = (
             Movie.objects
             .filter(
@@ -909,26 +805,19 @@ def browse(request, section):
 
         title = "🎭 Now Playing in Theaters"
 
-    # =========================
-    # Top Series
-    # =========================
-
     elif section == "top_series":
-
         movies = (
             Movie.objects
             .filter(media_type="tv")
-            .order_by("-rating", "-vote_count")
+            .order_by(
+                "-rating",
+                "-vote_count"
+            )
         )
 
         title = "⭐ Top Series This Week"
 
-    # =========================
-    # Dramas
-    # =========================
-
     elif section == "dramas":
-
         movies = (
             Movie.objects
             .filter(
@@ -939,12 +828,7 @@ def browse(request, section):
 
         title = "🎭 Dramas"
 
-    # =========================
-    # Invalid Section
-    # =========================
-
     else:
-
         return redirect("home")
 
     return render(

@@ -2,15 +2,15 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>My List - VibeStream</title>
 
-    <style>
+    <link rel="stylesheet" href="{% static 'css/auth_modal.css' %}">
 
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -20,48 +20,221 @@
 
         body {
             background: #050810;
-            color: #fff;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 90px;
+            height: 100vh;
+            background: #080b12;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            padding: 25px 12px;
+
+            transition: width 0.35s ease;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .sidebar:hover {
+            width: 240px;
+        }
+
+        .logo {
+            width: 58px;
+            height: 58px;
+
+            border-radius: 18px;
+
+            background: #e50914;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+
+            margin-bottom: 35px;
+
+            flex-shrink: 0;
+
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            background: #ff1f2d;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .nav-item {
+            width: 100%;
+            height: 56px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 16px;
+            padding: 0 16px;
+
+            border-radius: 16px;
+
+            color: #9aa4b2;
+
+            transition:
+                background 0.3s ease,
+                color 0.3s ease,
+                transform 0.2s ease;
+
+            white-space: nowrap;
+        }
+
+        .nav-item .icon {
+            width: 24px;
+            text-align: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .nav-item .label {
+            opacity: 0;
+            transform: translateX(-8px);
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .sidebar:hover .label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(229, 9, 20, 0.15);
+            color: #ffffff;
+            border: 1px solid rgba(229, 9, 20, 0.35);
+            transform: translateX(2px);
+        }
+
+        /* Sidebar Footer */
+
+        .sidebar-footer {
+            margin-top: auto;
+            width: 100%;
+            padding-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 34px;
+            height: 34px;
+
+            border-radius: 50%;
+
+            background: #e50914;
+
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            flex-shrink: 0;
+        }
+
+        /* Main */
+
+        .main {
+            margin-left: 90px;
+            width: calc(100% - 90px);
             min-height: 100vh;
         }
 
         .my-list-page {
             padding: 50px;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
+        /* Header */
+
         .page-header {
-            margin-bottom: 35px;
+            margin-bottom: 40px;
         }
 
         .page-header h1 {
-            font-size: 34px;
-            margin-bottom: 8px;
+            font-size: 38px;
+            margin-bottom: 10px;
         }
 
         .page-header p {
             color: #9da5b4;
-            font-size: 15px;
+            font-size: 16px;
         }
 
-        /* =========================
-           Movie Grid
-        ========================= */
+        /* Movie Grid */
 
         .movie-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+
+            grid-template-columns:
+                repeat(auto-fill, minmax(190px, 1fr));
+
             gap: 26px;
         }
 
         .movie-card {
             position: relative;
+
             background: #141922;
+
             border-radius: 16px;
+
             overflow: hidden;
-            transition: transform .25s ease;
+
+            border: 1px solid rgba(255, 255, 255, 0.06);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
         }
 
         .movie-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-7px);
+
+            box-shadow:
+                0 18px 40px rgba(0, 0, 0, 0.4);
         }
 
         .poster-link {
@@ -71,8 +244,16 @@
         .movie-card img {
             width: 100%;
             height: 285px;
+
             object-fit: cover;
+
             display: block;
+
+            transition: transform 0.3s ease;
+        }
+
+        .movie-card:hover img {
+            transform: scale(1.04);
         }
 
         .movie-info {
@@ -81,22 +262,32 @@
 
         .movie-info h3 {
             font-size: 17px;
+
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+
+            color: #ffffff;
         }
 
-        /* =========================
-           Remove Button
-        ========================= */
+        .movie-meta {
+            margin-top: 8px;
+
+            color: #9da5b4;
+
+            font-size: 14px;
+        }
+
+        /* Remove Button */
 
         .remove-btn {
             position: absolute;
+
             top: 12px;
             right: 12px;
 
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
 
             display: flex;
             align-items: center;
@@ -104,29 +295,32 @@
 
             border-radius: 50%;
 
-            background: rgba(0, 0, 0, .75);
-            color: #fff;
+            background: rgba(0, 0, 0, 0.8);
 
-            text-decoration: none;
+            color: #ffffff;
+
             font-size: 18px;
 
-            transition: .2s;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
         }
 
         .remove-btn:hover {
             background: #e50914;
-            transform: scale(1.08);
+            transform: scale(1.1);
         }
 
-        /* =========================
-           Empty State
-        ========================= */
+        /* Empty State */
 
         .empty-card {
-            min-height: 400px;
+            min-height: 450px;
 
             display: flex;
             flex-direction: column;
+
             align-items: center;
             justify-content: center;
 
@@ -134,15 +328,17 @@
 
             background: #141922;
 
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 22px;
+            border:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 24px;
 
             padding: 50px 20px;
         }
 
         .empty-icon {
-            width: 75px;
-            height: 75px;
+            width: 80px;
+            height: 80px;
 
             display: flex;
             align-items: center;
@@ -150,54 +346,104 @@
 
             border-radius: 50%;
 
-            background: rgba(229, 9, 20, .12);
+            background: rgba(229, 9, 20, 0.12);
 
-            font-size: 34px;
-            margin-bottom: 22px;
+            font-size: 38px;
+
+            margin-bottom: 24px;
         }
 
         .empty-card h2 {
-            font-size: 26px;
-            margin-bottom: 10px;
+            font-size: 28px;
+            margin-bottom: 12px;
         }
 
         .empty-card p {
             color: #9da5b4;
-            margin-bottom: 25px;
+
+            margin-bottom: 28px;
+
+            font-size: 16px;
         }
 
         .explore-btn {
             display: inline-block;
 
-            padding: 12px 24px;
+            padding: 13px 28px;
 
             background: #e50914;
-            color: #fff;
+
+            color: #ffffff;
 
             border-radius: 999px;
 
-            text-decoration: none;
             font-weight: 600;
 
-            transition: .2s;
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
         }
 
         .explore-btn:hover {
             background: #ff1f2d;
+            transform: translateY(-2px);
         }
 
-        /* =========================
-           Responsive
-        ========================= */
+        .signin-btn {
+            display: inline-block;
 
-        @media (max-width: 768px) {
+            padding: 13px 28px;
+
+            background: #e50914;
+
+            color: #ffffff;
+
+            border: none;
+
+            border-radius: 999px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .signin-btn:hover {
+            background: #ff1f2d;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
 
             .my-list-page {
-                padding: 30px 20px 50px;
+                padding: 35px 25px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .my-list-page {
+                padding: 30px 16px;
             }
 
             .page-header h1 {
-                font-size: 28px;
+                font-size: 30px;
             }
 
             .movie-grid {
@@ -208,111 +454,221 @@
             .movie-card img {
                 height: 240px;
             }
-
         }
-
     </style>
 </head>
 
 <body>
 
-<div class="my-list-page">
+<div class="app">
 
-    <!-- Page Header -->
+    <aside class="sidebar">
 
-    <div class="page-header">
+        <a href="{% url 'home' %}" class="logo">
+            V
+        </a>
 
-        <h1>My List</h1>
+        <nav>
 
-        <p>
-            Movies and TV shows you've saved to watch later.
-        </p>
+            <a href="{% url 'home' %}" class="nav-item">
+                <span class="icon">🏠</span>
+                <span class="label">Home</span>
+            </a>
 
-    </div>
+            <a href="{% url 'search' %}" class="nav-item">
+                <span class="icon">🔍</span>
+                <span class="label">Search</span>
+            </a>
+
+            <a href="{% url 'categories' %}" class="nav-item">
+                <span class="icon">🎬</span>
+                <span class="label">Categories</span>
+            </a>
+
+            <a href="{% url 'tv' %}" class="nav-item">
+                <span class="icon">📺</span>
+                <span class="label">TV Shows</span>
+            </a>
+
+            <a href="{% url 'favorites' %}" class="nav-item active">
+                <span class="icon">⭐</span>
+                <span class="label">My List</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'profile' %}" class="nav-item">
+
+                    <span class="profile-avatar">
+                        {{ user.username|first|upper }}
+                    </span>
+
+                    <span class="label">
+                        Profile
+                    </span>
+
+                </a>
+
+            {% else %}
+
+                <a
+                    href="javascript:void(0)"
+                    class="nav-item"
+                    onclick="openAuthModal()"
+                >
+
+                    <span class="profile-avatar">
+                        👤
+                    </span>
+
+                    <span class="label">
+                        Sign In
+                    </span>
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </aside>
 
 
-    <!-- Saved Movies -->
+    <main class="main">
 
-    {% if watchlist %}
+        <div class="my-list-page">
 
-        <div class="movie-grid">
+            <div class="page-header">
 
-            {% for item in watchlist %}
+                <h1>My List</h1>
 
-                <div class="movie-card">
+                <p>
+                    Movies and TV shows you've saved to watch later.
+                </p>
 
-                    <!-- Movie Poster -->
-
-                    <a
-                        href="{% url 'movie_detail' item.movie.id %}"
-                        class="poster-link"
-                    >
-
-                        <img
-                            src="{{ item.movie.poster_url }}"
-                            alt="{{ item.movie.title }}"
-                        >
-
-                    </a>
+            </div>
 
 
-                    <!-- Remove From My List -->
+            {% if watchlist %}
 
-                    <a
-                        href="{% url 'remove_from_watchlist' item.movie.id %}"
-                        class="remove-btn"
-                        title="Remove from My List"
-                    >
-                        ✕
-                    </a>
+                <div class="movie-grid">
+
+                    {% for item in watchlist %}
+
+                        <div class="movie-card">
+
+                            <a
+                                href="{% url 'movie_detail' item.movie.id %}"
+                                class="poster-link"
+                            >
+
+                                <img
+                                    src="{{ item.movie.poster_url }}"
+                                    alt="{{ item.movie.title }}"
+                                >
+
+                            </a>
 
 
-                    <!-- Movie Information -->
+                            {% if user.is_authenticated %}
 
-                    <div class="movie-info">
+                                <a
+                                    href="{% url 'remove_from_watchlist' item.movie.id %}"
+                                    class="remove-btn"
+                                    title="Remove from My List"
+                                >
+                                    ✕
+                                </a>
 
-                        <h3>
-                            {{ item.movie.title }}
-                        </h3>
+                            {% endif %}
 
-                    </div>
+
+                            <div class="movie-info">
+
+                                <h3>
+                                    {{ item.movie.title }}
+                                </h3>
+
+                                <div class="movie-meta">
+
+                                    ⭐ {{ item.movie.rating|floatformat:1 }}
+
+                                    {% if item.movie.release_year %}
+                                        • {{ item.movie.release_year }}
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
 
                 </div>
 
-            {% endfor %}
+
+            {% else %}
+
+                <div class="empty-card">
+
+                    <div class="empty-icon">
+                        ♡
+                    </div>
+
+
+                    {% if user.is_authenticated %}
+
+                        <h2>Your My List is Empty</h2>
+
+                        <p>
+                            Save movies and TV shows to watch them later.
+                        </p>
+
+                        <a
+                            href="{% url 'home' %}"
+                            class="explore-btn"
+                        >
+                            Explore Trending
+                        </a>
+
+
+                    {% else %}
+
+                        <h2>Sign in to use My List</h2>
+
+                        <p>
+                            Sign in to save movies and TV shows to your list.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="signin-btn"
+                            onclick="openAuthModal()"
+                        >
+                            Sign In
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
 
         </div>
 
-
-    {% else %}
-
-        <!-- Empty State -->
-
-        <div class="empty-card">
-
-            <div class="empty-icon">
-                ♡
-            </div>
-
-            <h2>Your My List is Empty</h2>
-
-            <p>
-                Save movies and TV shows to watch them later.
-            </p>
-
-            <a
-                href="{% url 'home' %}"
-                class="explore-btn"
-            >
-                Explore Trending
-            </a>
-
-        </div>
-
-    {% endif %}
+    </main>
 
 </div>
 
-</body>
 
+{% include "movies/components/auth_modal.html" %}
+
+<script src="{% static 'js/auth_modal.js' %}"></script>
+
+</body>
 </html>
