@@ -1,0 +1,399 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign In | VibeStream</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(229, 9, 20, 0.18), transparent 35%),
+                linear-gradient(135deg, #090909, #120607, #080808);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo a {
+            color: #e50914;
+            text-decoration: none;
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .login-card {
+            background: rgba(20, 20, 20, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 38px 34px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55);
+        }
+
+        .login-card h1 {
+            font-size: 28px;
+            margin-bottom: 9px;
+        }
+
+        .subtitle {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .error-message {
+            background: rgba(229, 9, 20, 0.12);
+            border: 1px solid rgba(229, 9, 20, 0.35);
+            color: #ff6b72;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #ddd;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+            background: #0d0d0d;
+            color: #ffffff;
+            border: 1px solid #333;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #e50914;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 75px;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .show-password:hover {
+            color: #ffffff;
+        }
+
+        .forgot-password {
+            display: block;
+            text-align: right;
+            margin-top: -7px;
+            margin-bottom: 22px;
+            color: #aaa;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            color: #ffffff;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: 8px;
+            background: #e50914;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            background: #f40612;
+            transform: translateY(-1px);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 25px 0;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #333;
+        }
+
+        .google-btn {
+            width: 100%;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: #151515;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        .google-btn:hover {
+            background: #202020;
+        }
+
+        .google-icon {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .signup-text {
+            text-align: center;
+            margin-top: 25px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .signup-text a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-text a:hover {
+            color: #e50914;
+        }
+
+        .back-home {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #777;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .back-home:hover {
+            color: #ffffff;
+        }
+
+        .field-error {
+            color: #ff6b72;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 22px;
+            }
+
+            .logo a {
+                font-size: 30px;
+            }
+
+            .login-card h1 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="logo">
+        <a href="{% url 'home' %}">VibeStream</a>
+    </div>
+
+    <div class="login-card">
+
+        <h1>Welcome back</h1>
+
+        <p class="subtitle">
+            Sign in to continue watching your favorites.
+        </p>
+
+        {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div class="error-message">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
+            <div class="form-group">
+                <label for="id_username">Email or Username</label>
+
+                <input
+                    type="text"
+                    id="id_username"
+                    name="username"
+                    value="{{ form.username.value|default:'' }}"
+                    placeholder="Enter your email or username"
+                    autocomplete="username"
+                    required
+                >
+
+                {% if form.username.errors %}
+                    <div class="field-error">
+                        {{ form.username.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password">Password</label>
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="id_password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show-password"
+                        onclick="togglePassword()"
+                    >
+                        Show
+                    </button>
+                </div>
+
+                {% if form.password.errors %}
+                    <div class="field-error">
+                        {{ form.password.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <a
+                href="{% url 'password_reset' %}"
+                class="forgot-password"
+            >
+                Forgot password?
+            </a>
+
+            <button type="submit" class="login-btn">
+                Sign In
+            </button>
+        </form>
+
+        <div class="divider">
+            OR
+        </div>
+
+        <a
+            href="{% url 'google_login' %}"
+            class="google-btn"
+        >
+            <span class="google-icon">G</span>
+            Continue with Google
+        </a>
+
+        <div class="signup-text">
+            Don't have an account?
+            <a href="{% url 'signup' %}">
+                Create your VibeStream account
+            </a>
+        </div>
+
+        <a
+            href="{% url 'home' %}"
+            class="back-home"
+        >
+            ← Back to VibeStream
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById("id_password");
+    const button = document.querySelector(".show-password");
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        button.textContent = "Hide";
+    } else {
+        passwordInput.type = "password";
+        button.textContent = "Show";
+    }
+}
+</script>
+
+</body>
+</html>

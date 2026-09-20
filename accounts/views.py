@@ -38,7 +38,6 @@ def signup_view(request):
 
     return render(request, "movies/signup.html", {"form": SignupForm()})
 
-
 # Login
 def login_view(request):
     if request.method == "POST":
@@ -62,7 +61,11 @@ def login_view(request):
                 )
 
                 first = user.first_name or user.username
-                messages.success(request, f"Welcome back, {first}!")
+
+                messages.success(
+                    request,
+                    f"Welcome back, {first}!"
+                )
 
                 next_url = (
                     request.POST.get("next")
@@ -72,24 +75,16 @@ def login_view(request):
 
                 return redirect(next_url)
 
-        return render(
+        # Login failed
+        messages.error(
             request,
-            "movies/login.html",
-            {
-                "form": form,
-                "error": "Invalid username/email or password.",
-                "next": request.GET.get("next", ""),
-            },
+            "Invalid username/email or password."
         )
 
-    return render(
-        request,
-        "movies/login.html",
-        {
-            "form": LoginForm(),
-            "next": request.GET.get("next", ""),
-        },
-    )
+        return redirect("home")
+
+    # If someone directly visits /accounts/login/
+    return redirect("home")
 
 
 # Logout

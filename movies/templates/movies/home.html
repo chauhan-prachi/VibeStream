@@ -1,519 +1,472 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>VibeStream</title>
-<link rel="stylesheet" href="{% static 'css/movie_card.css' %}">
-<link rel="stylesheet" href="{% static 'css/auth_modal.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/movie_card.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth_modal.css' %}">
+
     <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial,sans-serif;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
-        body{
-    background:#050810;
-    color:white;
-    overflow-x:hidden;
-}
-
-        a{
-            text-decoration:none;
-            color:white;
+        body {
+            background: #050810;
+            color: white;
+            overflow-x: hidden;
         }
 
-        .app{
-            display:flex;
-            min-height:100vh;
-        }
-/* =========================
-   Premium Collapsible Sidebar
-========================= */
-
-.sidebar{
-    position:fixed;
-    top:0;
-    left:0;
-    width:90px;
-    height:100vh;
-    background:#080b12;
-    border-right:1px solid rgba(255,255,255,.08);
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:25px 12px;
-
-    transition:width .35s ease;
-    overflow:hidden;
-    z-index:1000;
-}
-
-/* Expand on hover */
-.sidebar:hover{
-    width:240px;
-}
-
-/* Logo */
-.logo{
-    width:58px;
-    height:58px;
-    border-radius:18px;
-    background:#e50914;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:24px;
-    margin-bottom:35px;
-    flex-shrink:0;
-    text-decoration:none;
-    color:white;
-    font-weight:bold;
-    transition:transform .2s ease, background .2s ease;
-}
-
-.logo:hover{
-    transform:scale(1.05);
-    background:#ff1f2d;
-}
-
-
-/* Navigation container */
-.sidebar nav{
-    display:flex;
-    flex-direction:column;
-    width:100%;
-    gap:8px;
-}
-
-/* Navigation items */
-.nav-item{
-    width:100%;
-    height:56px;
-
-    display:flex;
-    align-items:center;
-    gap:16px;
-
-    padding:0 16px;
-
-    border-radius:16px;
-    color:#9aa4b2;
-    text-decoration:none;
-
-    transition:background .3s ease, color .3s ease, transform .2s ease;
-}
-
-/* Icon */
-.nav-item .icon{
-    width:24px;
-    text-align:center;
-    font-size:22px;
-    flex-shrink:0;
-}
-
-/* Label hidden by default */
-.nav-item .label{
-    opacity:0;
-    transform:translateX(-8px);
-    white-space:nowrap;
-    transition:opacity .2s ease, transform .2s ease;
-}
-
-/* Show labels when expanded */
-.sidebar:hover .label{
-    opacity:1;
-    transform:translateX(0);
-}
-
-/* Hover / active */
-.nav-item:hover,
-.nav-item.active{
-    background:rgba(229,9,20,.15);
-    color:#fff;
-    border:1px solid rgba(229,9,20,.35);
-    transform:translateX(2px);
-}
-
-/* Push profile icon to bottom */
-/* =========================
-   Sidebar Footer
-========================= */
-
-/* =========================
-   Sidebar Footer
-========================= */
-
-.sidebar-footer{
-    margin-top:auto;
-    width:100%;
-    padding-bottom:20px;
-}
-
-/* Profile item (same layout as other nav items) */
-.profile-item{
-    width:100%;
-    height:56px;
-    display:flex;
-    align-items:center;
-    gap:16px;
-    padding:0 16px;
-    border-radius:16px;
-    color:#c7ced8;
-    text-decoration:none;
-    transition:background .3s ease, color .3s ease, transform .2s ease;
-}
-
-.profile-item:hover{
-    background:rgba(229,9,20,.15);
-    color:#fff;
-    border:1px solid rgba(229,9,20,.35);
-    transform:translateX(2px);
-}
-
-/* Circular avatar */
-.profile-avatar{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    background:#e50914;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:16px;
-    font-weight:700;
-    flex-shrink:0;
-}
-
-/* Profile label (same behavior as sidebar labels) */
-.profile-item .label{
-    opacity:0;
-    transform:translateX(-8px);
-    white-space:nowrap;
-    transition:opacity .2s ease, transform .2s ease;
-}
-
-.sidebar:hover .profile-item .label{
-    opacity:1;
-    transform:translateX(0);
-}
-
-        /* =========================
-           Main
-        ========================= */
-
-        .main{
-            margin-left:90px;
-            width:calc(100% - 90px);
-            background:#050810;
+        a {
+            text-decoration: none;
+            color: white;
         }
 
-        /* =========================
-           Hero Banner
-        ========================= */
-
-        .hero{
-            position:relative;
-            height:82vh;
-            display:flex;
-            align-items:center;
-            padding:70px;
-            background-size:cover;
-            background-position:center;
-            transition:background-image 1s ease-in-out;
+        .app {
+            display: flex;
+            min-height: 100vh;
         }
 
-        .hero::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-        linear-gradient(
-            to right,
-            rgba(0,0,0,.82) 0%,
-            rgba(0,0,0,.45) 32%,
-            rgba(0,0,0,.18) 55%,
-            rgba(0,0,0,.06) 75%,
-            rgba(0,0,0,0) 100%
-        ),
-        linear-gradient(
-            to top,
-            rgba(5,8,16,.55) 0%,
-            rgba(5,8,16,.18) 28%,
-            rgba(5,8,16,0) 60%
-        );
-}
-
-        .hero-content{
-            position:relative;
-            z-index:2;
-            max-width:620px;
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 90px;
+            height: 100vh;
+            background: #080b12;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px 12px;
+            transition: width 0.35s ease;
+            overflow: hidden;
+            z-index: 1000;
         }
 
-        .badge{
-            display:inline-block;
-            background:#e50914;
-            padding:8px 16px;
-            border-radius:999px;
-            font-size:13px;
-            letter-spacing:.8px;
-            margin-bottom:18px;
+        .sidebar:hover {
+            width: 240px;
         }
 
-        .hero h1{
-            font-size:72px;
-            line-height:1;
-            margin-bottom:18px;
+        .logo {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            background: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 35px;
+            flex-shrink: 0;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.2s ease, background 0.2s ease;
         }
 
-        .hero-meta{
-            color:#d6d6d6;
-            margin-bottom:18px;
-            font-size:16px;
+        .logo:hover {
+            transform: scale(1.05);
+            background: #ff1f2d;
         }
 
-        .hero-overview{
-            color:#d7d7d7;
-            line-height:1.8;
-            margin-bottom:28px;
-            font-size:16px;
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 8px;
         }
 
-        .buttons{
-            display:flex;
-            gap:16px;
+        .nav-item {
+            width: 100%;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 16px;
+            border-radius: 16px;
+            color: #9aa4b2;
+            text-decoration: none;
+            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
         }
 
-        .btn{
-            padding:14px 28px;
-            border-radius:14px;
-            font-weight:bold;
-            transition:.3s;
+        .nav-item .icon {
+            width: 24px;
+            text-align: center;
+            font-size: 22px;
+            flex-shrink: 0;
         }
 
-        .btn-primary{
-            background:#e50914;
+        .nav-item .label {
+            opacity: 0;
+            transform: translateX(-8px);
+            white-space: nowrap;
+            transition: opacity 0.2s ease, transform 0.2s ease;
         }
 
-        .btn-primary:hover{
-            background:#ff1f2d;
+        .sidebar:hover .label {
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        .btn-secondary{
-            background:rgba(255,255,255,.15);
-            backdrop-filter:blur(8px);
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(229, 9, 20, 0.15);
+            color: #fff;
+            border: 1px solid rgba(229, 9, 20, 0.35);
+            transform: translateX(2px);
         }
 
-        .btn-secondary:hover{
-            background:rgba(255,255,255,.25);
+        .sidebar-footer {
+            margin-top: auto;
+            width: 100%;
+            padding-bottom: 20px;
         }
 
-        .hero-thumbnails{
-            position:absolute;
-            right:50px;
-            bottom:45px;
-            display:flex;
-            gap:12px;
-            z-index:2;
+        .profile-item {
+            width: 100%;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 16px;
+            border-radius: 16px;
+            color: #c7ced8;
+            text-decoration: none;
+            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
         }
 
-        .hero-thumb{
-            width:88px;
-            height:126px;
-            border-radius:14px;
-            overflow:hidden;
-            border:2px solid rgba(255,255,255,.15);
-            transition:.3s;
+        .profile-item:hover {
+            background: rgba(229, 9, 20, 0.15);
+            color: #fff;
+            border: 1px solid rgba(229, 9, 20, 0.35);
+            transform: translateX(2px);
         }
 
-        .hero-thumb:hover{
-            transform:scale(1.08);
-            border-color:#e50914;
+        .profile-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #e50914;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
         }
 
-        .hero-thumb img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
+        .profile-item .label {
+            opacity: 0;
+            transform: translateX(-8px);
+            white-space: nowrap;
+            transition: opacity 0.2s ease, transform 0.2s ease;
         }
 
-        /* =========================
-           Sections
-        ========================= */
-
-        .section{
-    padding:32px 40px;
-    
-}
-        
-
-        .section-header{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:18px;
+        .sidebar:hover .profile-item .label {
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        .section h2{
-            font-size:28px;
+        .main {
+            margin-left: 90px;
+            width: calc(100% - 90px);
+            background: #050810;
         }
 
-        .see-all{
-            color:#b8bec8;
-            cursor:pointer;
-            transition:.3s;
+        .hero {
+            position: relative;
+            height: 82vh;
+            display: flex;
+            align-items: center;
+            padding: 70px;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
         }
 
-        .see-all:hover{
-            color:white;
-        }
-/* =========================
-   Carousel
-========================= */
-
-.carousel{
-    position:relative;
-}
-
-.movie-row{
-    display:flex;
-    gap:22px;
-    overflow-x:auto;
-    scroll-behavior:smooth;
-    padding-bottom:10px;
-}
-
-.movie-row::-webkit-scrollbar{
-    display:none;
-}
-
-
-        /* =========================
-           Arrows
-        ========================= */
-
-        .arrow{
-            position:absolute;
-            top:42%;
-            transform:translateY(-50%);
-            width:50px;
-            height:50px;
-            border-radius:50%;
-            border:none;
-            background:rgba(0,0,0,.7);
-            color:white;
-            font-size:22px;
-            cursor:pointer;
-            z-index:5;
-            transition:.3s;
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    to right,
+                    rgba(0, 0, 0, 0.82) 0%,
+                    rgba(0, 0, 0, 0.45) 32%,
+                    rgba(0, 0, 0, 0.18) 55%,
+                    rgba(0, 0, 0, 0.06) 75%,
+                    rgba(0, 0, 0, 0) 100%
+                ),
+                linear-gradient(
+                    to top,
+                    rgba(5, 8, 16, 0.55) 0%,
+                    rgba(5, 8, 16, 0.18) 28%,
+                    rgba(5, 8, 16, 0) 60%
+                );
         }
 
-        .arrow:hover{
-            background:#e50914;
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 620px;
         }
 
-        .arrow.left{
-            left:-12px;
+        .badge {
+            display: inline-block;
+            background: #e50914;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            letter-spacing: 0.8px;
+            margin-bottom: 18px;
         }
 
-        .arrow.right{
-            right:-12px;
+        .hero h1 {
+            font-size: 72px;
+            line-height: 1;
+            margin-bottom: 18px;
         }
 
-        @media(max-width:900px){
+        .hero-meta {
+            color: #d6d6d6;
+            margin-bottom: 18px;
+            font-size: 16px;
+        }
 
-            .sidebar{
-                display:none;
+        .hero-overview {
+            color: #d7d7d7;
+            line-height: 1.8;
+            margin-bottom: 28px;
+            font-size: 16px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: #e50914;
+        }
+
+        .btn-primary:hover {
+            background: #ff1f2d;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .hero-thumbnails {
+            position: absolute;
+            right: 50px;
+            bottom: 45px;
+            display: flex;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        .hero-thumb {
+            width: 88px;
+            height: 126px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            transition: 0.3s;
+        }
+
+        .hero-thumb:hover {
+            transform: scale(1.08);
+            border-color: #e50914;
+        }
+
+        .hero-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .section {
+            padding: 32px 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .section h2 {
+            font-size: 28px;
+        }
+
+        .see-all {
+            color: #b8bec8;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .see-all:hover {
+            color: white;
+        }
+
+        .carousel {
+            position: relative;
+        }
+
+        .movie-row {
+            display: flex;
+            gap: 22px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding-bottom: 10px;
+        }
+
+        .movie-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 42%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 5;
+            transition: 0.3s;
+        }
+
+        .arrow:hover {
+            background: #e50914;
+        }
+
+        .arrow.left {
+            left: -12px;
+        }
+
+        .arrow.right {
+            right: -12px;
+        }
+
+        #toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 99999;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #181818;
+            color: #fff;
+            padding: 16px 18px;
+            border-radius: 16px;
+            min-width: 340px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: toastIn 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .toast-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #16a34a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .toast-title {
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .toast-message {
+            color: #d1d5db;
+            font-size: 14px;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(40px) scale(0.95);
             }
 
-            .main{
-                margin-left:0;
-                width:100%;
-            }
-
-            .hero{
-                padding:30px;
-                height:70vh;
-            }
-
-            .hero h1{
-                font-size:42px;
-            }
-
-            .hero-thumbnails{
-                display:none;
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
             }
         }
-        #toast-container{
-    position: fixed;
-    top: 24px;
-    right: 24px;
-    z-index: 99999;
-}
 
-.toast{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    background:#181818;
-    color:#fff;
-    padding:16px 18px;
-    border-radius:16px;
-    min-width:340px;
-    box-shadow:0 18px 45px rgba(0,0,0,.45);
-    border:1px solid rgba(255,255,255,.08);
-    animation:toastIn .45s cubic-bezier(.22,.61,.36,1);
-}
+        .toast.hide {
+            animation: toastOut 0.4s ease forwards;
+        }
 
-.toast-icon{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    background:#16a34a;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:700;
-    font-size:18px;
-}
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+        }
 
-.toast-title{
-    font-weight:700;
-    margin-bottom:2px;
-}
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
 
-.toast-message{
-    color:#d1d5db;
-    font-size:14px;
-}
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
 
-@keyframes toastIn{
-    from{
-        opacity:0;
-        transform:translateX(40px) scale(.95);
-    }
-    to{
-        opacity:1;
-        transform:translateX(0) scale(1);
-    }
-}
+            .hero {
+                padding: 30px;
+                height: 70vh;
+            }
 
-.toast.hide{
-    animation:toastOut .4s ease forwards;
-}
+            .hero h1 {
+                font-size: 42px;
+            }
 
-@keyframes toastOut{
-    to{
-        opacity:0;
-        transform:translateX(40px);
-    }
-}
-
+            .hero-thumbnails {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -521,65 +474,89 @@
 
 <div class="app">
 
-   <div class="sidebar">
+    <div class="sidebar">
 
-    <a href="{% url 'home' %}" class="logo">V</a>
-
-    <nav>
-
-        <a href="/" class="nav-item active">
-            <span class="icon">🏠</span>
-            <span class="label">Home</span>
+        <a href="{% url 'home' %}" class="logo">
+            V
         </a>
 
-        <a href="/search/" class="nav-item">
-            <span class="icon">🔍</span>
-            <span class="label">Search</span>
-        </a>
+        <nav>
 
-        <a href="/categories/" class="nav-item">
-            <span class="icon">🎬</span>
-            <span class="label">Categories</span>
-        </a>
+            <a href="/" class="nav-item active">
+                <span class="icon">🏠</span>
+                <span class="label">Home</span>
+            </a>
 
-        <a href="/tv/" class="nav-item">
-            <span class="icon">📺</span>
-            <span class="label">TV Shows</span>
-        </a>
+            <a href="/search/" class="nav-item">
+                <span class="icon">🔍</span>
+                <span class="label">Search</span>
+            </a>
 
-        <a href="/favorites/" class="nav-item">
-            <span class="icon">⭐</span>
-            <span class="label">My List</span>
-        </a>
+            <a href="/categories/" class="nav-item">
+                <span class="icon">🎬</span>
+                <span class="label">Categories</span>
+            </a>
 
-    </nav>
-<div class="sidebar-footer">
-    {% if user.is_authenticated %}
-    <a href="/profile/" class="nav-item profile-item" title="Profile">
-    <span class="profile-avatar">
-        {{ request.user.username|first|upper }}
-    </span>
-    <span class="label">Profile</span>
-</a>
-    {% else %}
-    <a href="javascript:void(0)"
-       class="nav-item profile-item"
-       onclick="openAuthModal()"
-       title="Sign In">
-        <span class="profile-avatar">👤</span>
-        <span class="label">Sign In</span>
-    </a>
-    {% endif %}
-</div>
+            <a href="/tv/" class="nav-item">
+                <span class="icon">📺</span>
+                <span class="label">TV Shows</span>
+            </a>
 
-</div>
-    
+            <a href="/favorites/" class="nav-item">
+                <span class="icon">⭐</span>
+                <span class="label">My List</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+
+            {% if user.is_authenticated %}
+
+            <a href="/profile/" class="nav-item profile-item" title="Profile">
+
+                <span class="profile-avatar">
+                    {{ request.user.username|first|upper }}
+                </span>
+
+                <span class="label">
+                    Profile
+                </span>
+
+            </a>
+
+            {% else %}
+
+            <a href="javascript:void(0)"
+               class="nav-item profile-item"
+               onclick="openAuthModal()"
+               title="Sign In">
+
+                <span class="profile-avatar">
+                    👤
+                </span>
+
+                <span class="label">
+                    Sign In
+                </span>
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
     <div class="main">
 
         {% if featured_movie %}
 
-        <section id="hero-banner" class="hero"
-            style="background-image:url('{{ featured_movie.backdrop_url }}');">
+        <section
+            id="hero-banner"
+            class="hero"
+            style="background-image: url('{{ featured_movie.backdrop_url }}');"
+        >
 
             <div class="hero-content">
 
@@ -605,19 +582,24 @@
 
                 <div class="buttons">
 
-                    <a href="{% url 'watch_movie' featured_movie.id %}"
-                      class="btn btn-primary">
+                    <a
+                        href="{% url 'watch_movie' featured_movie.id %}"
+                        class="btn btn-primary"
+                    >
                         ▶ Play Now
-                
                     </a>
 
-                    <a href="{% url 'add_to_watchlist' featured_movie.id %}" 
-                       class="btn btn-secondary">
-                       + Watch Later
+                    <a
+                        href="{% url 'add_to_watchlist' featured_movie.id %}"
+                        class="btn btn-secondary"
+                    >
+                        + Watch Later
                     </a>
 
-                    <a href="{% url 'movie_detail' featured_movie.id %}"
-                       class="btn btn-secondary">
+                    <a
+                        href="{% url 'movie_detail' featured_movie.id %}"
+                        class="btn btn-secondary"
+                    >
                         ℹ More Info
                     </a>
 
@@ -629,12 +611,14 @@
 
                 {% for movie in featured_movies %}
 
-                <a href="{% url 'movie_detail' movie.id %}"
-                   class="hero-thumb">
-
-                    <img src="{{ movie.poster_url }}"
-                         alt="{{ movie.title }}">
-
+                <a
+                    href="{% url 'movie_detail' movie.id %}"
+                    class="hero-thumb"
+                >
+                    <img
+                        src="{{ movie.poster_url }}"
+                        alt="{{ movie.title }}"
+                    >
                 </a>
 
                 {% endfor %}
@@ -644,228 +628,321 @@
         </section>
 
         {% endif %}
-        
-<!-- ========================= trending 
-     Trending Movies
-========================= -->
 
-<section class="section">
+        <section class="section">
 
-    <div class="section-header">
-        <h2>🔥 Trending Movies</h2>
-        <a href="{% url 'trending_movies' %}" class="see-all">
-    See All →
-</a>
-    </div>
+            <div class="section-header">
 
-    <div class="carousel">
+                <h2>
+                    🔥 Trending Movies
+                </h2>
 
-        <button class="arrow left"
-                onclick="scrollRow('trending-row', -500)">
-            ❮
-        </button>
+                <a
+                    href="{% url 'trending_movies' %}"
+                    class="see-all"
+                >
+                    See All →
+                </a>
 
-        <div class="movie-row" id="trending-row">
+            </div>
 
-            {% for movie in popular_movies %}
+            <div class="carousel">
 
-{% include "movies/components/movie_card.html" %}
-{% endfor %}
+                <button
+                    class="arrow left"
+                    onclick="scrollRow('trending-row', -500)"
+                >
+                    ❮
+                </button>
 
-        </div>
+                <div
+                    class="movie-row"
+                    id="trending-row"
+                >
 
-        <button class="arrow right"
-                onclick="scrollRow('trending-row', 500)">
-            ❯
-        </button>
+                    {% for movie in popular_movies %}
 
-    </div>
+                    {% include "movies/components/movie_card.html" %}
 
-</section>
+                    {% endfor %}
 
-<!-- =========================
-     Top Movies This Week
-========================= -->
+                </div>
 
-<section class="section">
+                <button
+                    class="arrow right"
+                    onclick="scrollRow('trending-row', 500)"
+                >
+                    ❯
+                </button>
 
-    <div class="section-header">
-        <h2>🏆 Top Movies This Week</h2>
-        <a href="{% url 'top_movies' %}" class="see-all">
-    See All →
-</a>
-    </div>
+            </div>
 
-    <div class="carousel">
+        </section>
 
-        <button class="arrow left"
-                onclick="scrollRow('top-row', -500)">
-            ❮
-        </button>
+        <section class="section">
 
-        <div class="movie-row" id="top-row">
+            <div class="section-header">
 
-            {% for movie in top_rated_movies %}
+                <h2>
+                    🏆 Top Movies This Week
+                </h2>
 
-            {% include "movies/components/movie_card.html" %}
+                <a
+                    href="{% url 'top_movies' %}"
+                    class="see-all"
+                >
+                    See All →
+                </a>
 
+            </div>
 
-{% endfor %}
-        </div>
+            <div class="carousel">
 
-        <button class="arrow right"
-                onclick="scrollRow('top-row', 500)">
-            ❯
-        </button>
+                <button
+                    class="arrow left"
+                    onclick="scrollRow('top-row', -500)"
+                >
+                    ❮
+                </button>
 
-    </div>
+                <div
+                    class="movie-row"
+                    id="top-row"
+                >
 
-</section>
+                    {% for movie in top_rated_movies %}
 
-<!-- =========================
-     Now Playing in Theaters
-========================= -->
+                    {% include "movies/components/movie_card.html" %}
 
-<section class="section">
+                    {% endfor %}
 
-    <div class="section-header">
-        <h2>🎭 Now Playing in Theaters</h2>
-        <a href="{% url 'now_playing' %}" class="see-all">
-    See All →
-</a>
-    </div>
+                </div>
 
-    <div class="carousel">
+                <button
+                    class="arrow right"
+                    onclick="scrollRow('top-row', 500)"
+                >
+                    ❯
+                </button>
 
-        <button class="arrow left"
-                onclick="scrollRow('theater-row', -500)">
-            ❮
-        </button>
+            </div>
 
-        <div class="movie-row" id="theater-row">
+        </section>
 
-            {% for movie in now_playing_movies %}
+        <section class="section">
 
-            {% include "movies/components/movie_card.html" %}
+            <div class="section-header">
 
-            {% endfor %}
+                <h2>
+                    🎭 Now Playing in Theaters
+                </h2>
 
-        </div>
+                <a
+                    href="{% url 'now_playing' %}"
+                    class="see-all"
+                >
+                    See All →
+                </a>
 
-        <button class="arrow right"
-                onclick="scrollRow('theater-row', 500)">
-            ❯
-        </button>
+            </div>
 
-    </div>
+            <div class="carousel">
 
-</section>
-<!-- =========================
-     Trending TV Shows
-========================= -->
+                <button
+                    class="arrow left"
+                    onclick="scrollRow('theater-row', -500)"
+                >
+                    ❮
+                </button>
 
-<section class="section">
+                <div
+                    class="movie-row"
+                    id="theater-row"
+                >
 
-    <div class="section-header">
-        <h2>📺 Trending TV Shows</h2>
-     <a href="{% url 'trending_tv' %}" class="see-all">
-    See All →
-</a>
-    </div>
+                    {% for movie in now_playing_movies %}
 
-    <div class="carousel">
+                    {% include "movies/components/movie_card.html" %}
 
-        <button class="arrow left" onclick="scrollRow('tv-row', -500)">❮</button>
+                    {% endfor %}
 
-        <div class="movie-row" id="tv-row">
+                </div>
 
-            {% for movie in trending_tv|slice:":12" %}
+                <button
+                    class="arrow right"
+                    onclick="scrollRow('theater-row', 500)"
+                >
+                    ❯
+                </button>
 
-            {% include "movies/components/movie_card.html" %}
+            </div>
 
-            {% endfor %}
+        </section>
 
-        </div>
+        <section class="section">
 
-        <button class="arrow right" onclick="scrollRow('tv-row', 500)">❯</button>
+            <div class="section-header">
 
-    </div>
+                <h2>
+                    📺 Trending TV Shows
+                </h2>
 
-</section>
+                <a
+                    href="{% url 'trending_tv' %}"
+                    class="see-all"
+                >
+                    See All →
+                </a>
 
-<!-- =========================
-     Top Series This Week
-========================= -->
+            </div>
 
-<section class="section">
+            <div class="carousel">
 
-    <div class="section-header">
-        <h2>⭐ Top Series This Week</h2>
-        <a href="{% url 'top_series' %}" class="see-all">
-    See All →
-</a>
-    </div>
+                <button
+                    class="arrow left"
+                    onclick="scrollRow('tv-row', -500)"
+                >
+                    ❮
+                </button>
 
-    <div class="carousel">
+                <div
+                    class="movie-row"
+                    id="tv-row"
+                >
 
-        <button class="arrow left" onclick="scrollRow('series-row', -500)">❮</button>
+                    {% for movie in trending_tv|slice:":12" %}
 
-        <div class="movie-row" id="series-row">
+                    {% include "movies/components/movie_card.html" %}
 
-            {% for movie in top_rated_movies|slice:":12" %}
+                    {% endfor %}
 
-            {% include "movies/components/movie_card.html" %}
-            {% endfor %}
+                </div>
 
-        </div>
+                <button
+                    class="arrow right"
+                    onclick="scrollRow('tv-row', 500)"
+                >
+                    ❯
+                </button>
 
-        <button class="arrow right" onclick="scrollRow('series-row', 500)">❯</button>
+            </div>
 
-    </div>
+        </section>
 
-</section>
+        <section class="section">
 
-<!-- =========================
-     Dramas
-========================= -->
+            <div class="section-header">
 
-<section class="section">
+                <h2>
+                    ⭐ Top Series This Week
+                </h2>
 
-    <div class="section-header">
-        <h2>🎭 Dramas</h2>
-         <a href="{% url 'dramas' %}" class="see-all">
-    See All →
-</a>
-    </div>
+                <a
+                    href="{% url 'top_series' %}"
+                    class="see-all"
+                >
+                    See All →
+                </a>
 
-    <div class="carousel">
+            </div>
 
-        <button class="arrow left" onclick="scrollRow('drama-row', -500)">❮</button>
+            <div class="carousel">
 
-        <div class="movie-row" id="drama-row">
+                <button
+                    class="arrow left"
+                    onclick="scrollRow('series-row', -500)"
+                >
+                    ❮
+                </button>
 
-            {% for movie in upcoming_movies|slice:":12" %}
+                <div
+                    class="movie-row"
+                    id="series-row"
+                >
 
-           {% include "movies/components/movie_card.html" %}
+                    {% for movie in top_rated_movies|slice:":12" %}
 
-            {% endfor %}
+                    {% include "movies/components/movie_card.html" %}
 
-        </div>
+                    {% endfor %}
 
-        <button class="arrow right" onclick="scrollRow('drama-row', 500)">❯</button>
+                </div>
 
-    </div>
+                <button
+                    class="arrow right"
+                    onclick="scrollRow('series-row', 500)"
+                >
+                    ❯
+                </button>
 
-</section>
+            </div>
+
+        </section>
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>
+                    🎭 Dramas
+                </h2>
+
+                <a
+                    href="{% url 'dramas' %}"
+                    class="see-all"
+                >
+                    See All →
+                </a>
+
+            </div>
+
+            <div class="carousel">
+
+                <button
+                    class="arrow left"
+                    onclick="scrollRow('drama-row', -500)"
+                >
+                    ❮
+                </button>
+
+                <div
+                    class="movie-row"
+                    id="drama-row"
+                >
+
+                    {% for movie in upcoming_movies|slice:":12" %}
+
+                    {% include "movies/components/movie_card.html" %}
+
+                    {% endfor %}
+
+                </div>
+
+                <button
+                    class="arrow right"
+                    onclick="scrollRow('drama-row', 500)"
+                >
+                    ❯
+                </button>
+
+            </div>
+
+        </section>
 
     </div>
 
 </div>
-    {% if messages %}
+
+{% if messages %}
+
 <div id="toast-container">
+
     {% for message in messages %}
+
     <div class="toast {{ message.tags }}">
+
         <div class="toast-icon">
+
             {% if message.tags == "success" %}
                 ✓
             {% elif message.tags == "error" %}
@@ -873,39 +950,40 @@
             {% else %}
                 !
             {% endif %}
+
         </div>
 
         <div class="toast-content">
+
             <div class="toast-title">
-                {% if "deleted" in message|stringformat:"s"|lower %}
-                    Account Deleted
-                {% elif "updated" in message|stringformat:"s"|lower %}
-                    Profile Updated
-                {% elif "logged out" in message|stringformat:"s"|lower %}
-                    Logged Out
-                {% elif "welcome" in message|stringformat:"s"|lower %}
-                    Welcome
-                {% else %}
-                    VibeStream
-                {% endif %}
+                VibeStream
             </div>
 
             <div class="toast-message">
                 {{ message }}
             </div>
+
         </div>
+
     </div>
+
     {% endfor %}
+
 </div>
+
 {% endif %}
 
-
 <script>
+function scrollRow(id, amount) {
+    const row = document.getElementById(id);
 
-function scrollRow(id, amount){
-    document.getElementById(id).scrollBy({
+    if (!row) {
+        return;
+    }
+
+    row.scrollBy({
         left: amount,
-        behavior: 'smooth'
+        behavior: "smooth"
     });
 }
 
@@ -913,52 +991,69 @@ const heroMovies = [
     {% for movie in featured_movies %}
     {
         title: "{{ movie.title|escapejs }}",
-        backdrop: "{{ movie.backdrop_url }}",
-        rating: "{{ movie.rating|floatformat:1 }}",
-        year: "{{ movie.release_year }}",
+        backdrop: "{{ movie.backdrop_url|escapejs }}",
+        rating: {{ movie.rating|floatformat:1 }},
+        year: {{ movie.release_year }},
         genre: "{{ movie.genre|escapejs }}",
         overview: "{{ movie.overview|truncatechars:220|escapejs }}"
     }{% if not forloop.last %},{% endif %}
     {% endfor %}
 ];
 
-let currentHero = 0;
+let currentHero = -1;
 
-function changeHero(){
+function changeHero() {
+    if (heroMovies.length === 0) {
+        return;
+    }
 
-    if(heroMovies.length === 0) return;
+    const heroBanner = document.getElementById("hero-banner");
+    const heroTitle = document.getElementById("hero-title");
+    const heroMeta = document.getElementById("hero-meta");
+    const heroOverview = document.getElementById("hero-overview");
+
+    if (!heroBanner || !heroTitle || !heroMeta || !heroOverview) {
+        return;
+    }
 
     currentHero = (currentHero + 1) % heroMovies.length;
 
     const movie = heroMovies[currentHero];
 
-    document.getElementById("hero-banner").style.backgroundImage =
-        `url('${movie.backdrop}')`;
-
-    document.getElementById("hero-title").textContent =
-        movie.title;
-
-    document.getElementById("hero-meta").textContent =
-         `⭐ ${movie.rating} • ${movie.year} • ${movie.genre}`;
-
-    document.getElementById("hero-overview").textContent =
-        movie.overview;
+    heroBanner.style.backgroundImage = "url('" + movie.backdrop + "')";
+    heroTitle.textContent = movie.title;
+    heroMeta.textContent = "⭐ " + movie.rating + " • " + movie.year + " • " + movie.genre;
+    heroOverview.textContent = movie.overview;
 }
 
-setInterval(changeHero, 6000);
+if (heroMovies.length > 0) {
+    changeHero();
+}
 
+if (heroMovies.length > 1) {
+    setInterval(changeHero, 6000);
+}
 </script>
+
+
 {% include "movies/components/auth_modal.html" %}
-<script src="{% static 'js/auth_modal.js' %}"></script>{% include "movies/components/auth_modal.html" %}
+
+<script src="{% static 'js/auth_modal.js' %}"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const toast = document.querySelector(".toast");
-    if (!toast) return;
+
+    if (!toast) {
+        return;
+    }
 
     setTimeout(() => {
         toast.classList.add("hide");
     }, 3000);
 });
 </script>
+
 </body>
+
 </html>

@@ -5,7 +5,13 @@
     <div class="auth-card">
 
         <!-- Close Button -->
-        <button class="close-btn" onclick="closeAuthModal()">×</button>
+        <button
+            type="button"
+            class="close-btn"
+            onclick="closeAuthModal()"
+        >
+            ×
+        </button>
 
         <!-- Logo -->
         <div class="logo-wrap">
@@ -15,60 +21,87 @@
 
         <!-- Heading -->
         <h2>Sign In</h2>
-        <p class="subtitle">Sign in to continue watching</p>
+
+        <p class="subtitle">
+            Sign in to continue watching
+        </p>
+
+        <!-- Login Error -->
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                    <div class="auth-error">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
 
         <!-- Login Form -->
         <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
+            {% csrf_token %}
 
-    <input
-        type="text"
-        name="username"
-        placeholder="Email or Username"
-        autocomplete="username"
-        required>
+            <input
+                type="text"
+                name="username"
+                placeholder="Email or Username"
+                autocomplete="username"
+                required
+            >
 
-    <div class="password-field">
-        <input
-            type="password"
-            id="loginPassword"
-            name="password"
-            placeholder="Password"
-            autocomplete="current-password"
-            required>
+            <div class="password-field">
+                <input
+                    type="password"
+                    id="loginPassword"
+                    name="password"
+                    placeholder="Password"
+                    autocomplete="current-password"
+                    required
+                >
 
-        <span onclick="togglePassword('loginPassword', this)">
-            Show
-        </span>
-    </div>
+                <span onclick="togglePassword('loginPassword', this)">
+                    Show
+                </span>
+            </div>
 
-    <div class="forgot-password">
-    <a href="{% url 'password_reset' %}">Forgot password?</a>
-</div>
+            <div class="forgot-password">
+                <a href="{% url 'password_reset' %}">
+                    Forgot password?
+                </a>
+            </div>
 
-    <button type="submit" class="primary-btn">
-        Sign In
-    </button>
-</form>
+            <button type="submit" class="primary-btn">
+                Sign In
+            </button>
+        </form>
+
         <!-- Divider -->
         <div class="divider">
             <span>OR</span>
         </div>
 
         <!-- Google Login -->
-        <a href="{% url 'google_login' %}" class="google-btn">
+        <a
+            href="{% url 'google_login' %}"
+            class="google-btn"
+        >
             <img
-                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-                alt="Google"> 
-            Continue with Google 
-        </a> 
- 
-        <!-- Signup Link --> 
-        <div class="signup-link"> 
-            New to VibeStream? 
-            <a href="{% url 'signup' %}">Create your VibeStream account</a> 
-        </div> 
- 
-    </div> 
- 
-</div>   
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                alt="Google"
+            >
+
+            Continue with Google
+        </a>
+
+        <!-- Signup Link -->
+        <div class="signup-link">
+            New to VibeStream?
+
+            <a href="{% url 'signup' %}">
+                Create your VibeStream account
+            </a>
+        </div>
+
+    </div>
+
+</div>
